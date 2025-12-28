@@ -114,16 +114,31 @@
             font-size: 1.2rem;
         }
 
-        .diagram-box {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            margin: 24px 0;
-            font-family: monospace;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            overflow-x: auto;
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .stats-table th, .stats-table td {
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stats-table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .stats-table td {
+            color: var(--dark);
+        }
+
+        .stats-table .highlight {
+            color: #dc2626;
+            font-weight: 600;
         }
 
         .impact-list {
@@ -186,8 +201,8 @@
                 <a href="../index.html#problem">Challenges</a>
                 <a href="../index.html#devices">Devices</a>
                 <a href="../index.html#principles">Principles</a>
-                <a href="../index.html#adapters">Adapters</a>
-                <a href="https://github.com/electrification-bus">GitHub</a>
+                <a href="../index.html#adapters">Relationship to Other Standards</a>
+                <a href="../index.html#resources">Resources</a>
             </nav>
         </div>
     </header>
@@ -217,21 +232,34 @@
             </p>
 
             <h2>The Combinatorial Explosion</h2>
-            <div class="diagram-box">
-Custom Integrations Scale Poorly
-
-Manufacturers:  3      5       10       20
-Integrations:   3      10      45       190
-
-For each pair of manufacturers to integrate:
-- Business development negotiations
-- Technical API/protocol discussions
-- Custom development work
-- Testing and certification
-- Ongoing maintenance
-- Version compatibility tracking
-
-With 10 major HEI device makers, that's 45 separate bilateral agreements!
+            <div class="example-box">
+                <h3>Custom Integrations Scale Poorly</h3>
+                <table class="stats-table">
+                    <tr>
+                        <th>Manufacturers</th>
+                        <td>3</td>
+                        <td>5</td>
+                        <td>10</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <th>Integrations Required</th>
+                        <td>3</td>
+                        <td>10</td>
+                        <td class="highlight">45</td>
+                        <td class="highlight">190</td>
+                    </tr>
+                </table>
+                <p>For each pair of manufacturers to integrate:</p>
+                <ul>
+                    <li>Business development negotiations</li>
+                    <li>Technical API/protocol discussions</li>
+                    <li>Custom development work</li>
+                    <li>Testing and certification</li>
+                    <li>Ongoing maintenance</li>
+                    <li>Version compatibility tracking</li>
+                </ul>
+                <p><strong>With 10 major HEI device makers, that's 45 separate bilateral agreements!</strong></p>
             </div>
 
             <h2>Vendor Dependencies</h2>

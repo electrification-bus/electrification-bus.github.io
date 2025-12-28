@@ -114,16 +114,25 @@
             font-size: 1.2rem;
         }
 
-        .diagram-box {
+        .diagram {
             background: white;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            margin: 24px 0;
-            font-family: monospace;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            overflow-x: auto;
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .diagram .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
         }
 
         .impact-list {
@@ -199,8 +208,8 @@
                 <a href="../index.html#problem">Challenges</a>
                 <a href="../index.html#devices">Devices</a>
                 <a href="../index.html#principles">Principles</a>
-                <a href="../index.html#adapters">Adapters</a>
-                <a href="https://github.com/electrification-bus">GitHub</a>
+                <a href="../index.html#adapters">Relationship to Other Standards</a>
+                <a href="../index.html#resources">Resources</a>
             </nav>
         </div>
     </header>
@@ -215,6 +224,15 @@
             <p class="subtitle">
                 The Microgrid Interconnect Device (MID) function is typically integrated into a single,
                 specific, grid-forming DER - and is unable to interoperate with additional grid-forming DERs.
+            </p>
+
+            <h2>What is a DER?</h2>
+            <p>
+                A Distributed Energy Resource (DER) is any device that can generate, store, or manage
+                electricity at or near where it will be used. In a home, DERs include solar panels,
+                battery storage systems, EV chargers with vehicle-to-home (V2H) capability, and generators.
+                A "grid-forming" DER is one that can create its own AC power independently - essentially
+                acting as the grid for your home during an outage.
             </p>
 
             <h2>What is a MID?</h2>
@@ -233,9 +251,8 @@
             <h2>The Problem</h2>
             <p>
                 Today, the MID function is typically integrated directly into a battery system or
-                inverter. The Tesla Powerwall has a built-in transfer switch. The Enphase IQ System
-                Controller serves this function. This tight integration makes sense for simple
-                systems with a single grid-forming device.
+                inverter. The Tesla Powerwall has a built-in transfer switch. This tight integration
+                makes sense for simple systems with a single grid-forming device.
             </p>
             <p>
                 <strong>But what happens when you have multiple grid-forming DERs?</strong>
@@ -259,59 +276,49 @@
             </div>
 
             <h2>The Coordination Challenge</h2>
-            <div class="diagram-box">
-Current Situation: MID integrated into BESS
+            <div class="diagram">
+                <pre class="mermaid">
+flowchart TB
+    subgraph grid["Utility Grid"]
+        G[("Grid<br/>Connection")]
+    end
 
-                        Grid
-                          │
-                    ┌─────┴─────┐
-                    │Powerwall  │
-                    │ (BESS +   │◄── MID only knows about the Powerwall
-                    │   MID)    │    Can't coordinate with other DERs
-                    └─────┬─────┘
-                          │
-                    ┌─────┴─────┐
-                    │  Home     │
-                    │  Loads    │
-                    └───────────┘
-                          │
-         ┌────────────────┼────────────────┐
-         │                │                │
-    ┌────┴────┐     ┌────┴────┐     ┌────┴────┐
-    │  Solar  │     │V2H EVSE │     │Generator│
-    │Inverter │     │  + EV   │     │         │
-    └─────────┘     └─────────┘     └─────────┘
-         │                │                │
-         └────────────────┴────────────────┘
-                          │
-              These DERs can't participate
-              in grid-forming because the
-              MID doesn't know about them
+    subgraph bess["Powerwall (BESS + MID)"]
+        PW["Battery +<br/>Integrated MID"]
+    end
+
+    subgraph home["Home Loads"]
+        HL["Electrical<br/>Panel"]
+    end
+
+    subgraph ders["Other DERs - Cannot Participate in Grid-Forming"]
+        Solar["Solar<br/>Inverter"]
+        V2H["V2H EVSE<br/>+ EV"]
+        Gen["Generator"]
+    end
+
+    G <--> PW
+    PW <--> HL
+    HL --- Solar
+    HL --- V2H
+    HL --- Gen
+
+    PW -.-x|"MID only knows<br/>about Powerwall"| Solar
+    PW -.-x|"Can't coordinate"| V2H
+    PW -.-x|"with other DERs"| Gen
+                </pre>
+                <p class="diagram-caption">
+                    Current Situation: The MID integrated into the BESS cannot coordinate with other grid-forming DERs
+                </p>
             </div>
 
             <h2>Consequences</h2>
             <ul>
                 <li><strong>Underutilized resources:</strong> Your EV's 100kWh battery sits idle during outages because the MID doesn't know it can help</li>
                 <li><strong>No graceful handoff:</strong> When the BESS depletes, you can't smoothly transition to generator backup</li>
-                <li><strong>Solar curtailment issues:</strong> The BESS MID uses frequency shifting to curtail solar, causing problems (see below)</li>
+                <li><strong>Solar curtailment issues:</strong> The BESS MID uses frequency shifting to curtail solar, causing <a href="siloed-devices.html#frequency-shifting">side effects</a></li>
                 <li><strong>Stranded investment:</strong> V2H capability you paid for can't be used for whole-home backup</li>
             </ul>
-
-            <div class="warning-box">
-                <h4>The Frequency Shifting Problem</h4>
-                <p>
-                    When off-grid with high state of charge and excess solar production, a Tesla Powerwall
-                    needs to curtail PV output. Since it can't communicate with the solar inverter, it
-                    shifts the line frequency out of spec, triggering the solar inverter's safety shutdown.
-                </p>
-                <p>This causes side effects:</p>
-                <ul>
-                    <li>Light dimmers flicker from the frequency change</li>
-                    <li>Household UPS units detect the frequency anomaly as a power failure</li>
-                    <li>UPS units switch to battery, drain quickly, and drop network equipment</li>
-                    <li>Result: You lose internet/computing during an outage even though you have power!</li>
-                </ul>
-            </div>
 
             <h2>The Growing Problem</h2>
             <p>
@@ -366,5 +373,21 @@ Current Situation: MID integrated into BESS
             <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
         </div>
     </footer>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#eff6ff',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#2563eb',
+                lineColor: '#64748b',
+                secondaryColor: '#ecfdf5',
+                tertiaryColor: '#f8fafc'
+            }
+        });
+    </script>
 </body>
 </html>

@@ -114,16 +114,25 @@
             font-size: 1.2rem;
         }
 
-        .diagram-box {
+        .diagram {
             background: white;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
+            border-radius: 12px;
+            padding: 32px;
             margin: 24px 0;
-            font-family: monospace;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            overflow-x: auto;
+            text-align: center;
+        }
+
+        .diagram .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
         }
 
         .impact-list {
@@ -212,8 +221,8 @@
                 <a href="../index.html#problem">Challenges</a>
                 <a href="../index.html#devices">Devices</a>
                 <a href="../index.html#principles">Principles</a>
-                <a href="../index.html#adapters">Adapters</a>
-                <a href="https://github.com/electrification-bus">GitHub</a>
+                <a href="../index.html#adapters">Relationship to Other Standards</a>
+                <a href="../index.html#resources">Resources</a>
             </nav>
         </div>
     </header>
@@ -247,42 +256,32 @@
                 an explosion of network traffic and CPU load:
             </p>
 
-            <div class="diagram-box">
-REST Polling: Everyone asks everyone for everything
+            <div class="diagram">
+                <pre class="mermaid">
+flowchart LR
+    subgraph devices["HEI Devices"]
+        B["Battery"]
+        S["Solar"]
+        P["Smart Panel"]
+        C["EV Charger"]
+        H["HEMS"]
+    end
 
-    Battery ──────────────────────┐
-       │                          │
-       ├─► Poll Solar (1/sec)     │
-       ├─► Poll Panel (1/sec)     │
-       └─► Poll Charger (1/sec)   │
-                                  │
-    Solar ────────────────────────┤
-       │                          │
-       ├─► Poll Battery (1/sec)   │
-       ├─► Poll Panel (1/sec)     │
-       └─► Poll Charger (1/sec)   │
-                                  │
-    Smart Panel ──────────────────┤
-       │                          │
-       ├─► Poll Battery (1/sec)   │
-       ├─► Poll Solar (1/sec)     │
-       └─► Poll Charger (1/sec)   │
-                                  │
-    EV Charger ───────────────────┤
-       │                          │
-       ├─► Poll Battery (1/sec)   │
-       ├─► Poll Solar (1/sec)     │
-       └─► Poll Panel (1/sec)     │
-                                  │
-    HEMS ─────────────────────────┘
-       │
-       ├─► Poll Battery (1/sec)
-       ├─► Poll Solar (1/sec)
-       ├─► Poll Panel (1/sec)
-       └─► Poll Charger (1/sec)
-
-Total: 16 polling connections, 16 requests/second
-(And this is a simple example - real homes have more devices!)
+    B <-->|"poll"| S
+    B <-->|"poll"| P
+    B <-->|"poll"| C
+    S <-->|"poll"| P
+    S <-->|"poll"| C
+    P <-->|"poll"| C
+    H -->|"poll"| B
+    H -->|"poll"| S
+    H -->|"poll"| P
+    H -->|"poll"| C
+                </pre>
+                <p class="diagram-caption">
+                    REST Polling: Everyone asks everyone for everything.<br>
+                    16+ polling connections, 16+ requests/second - and this is a simple example!
+                </p>
             </div>
 
             <h2>Scaling Problems</h2>
@@ -366,16 +365,37 @@ Total: 16 polling connections, 16 requests/second
                     6 connections to the broker. Each device publishes once, and all interested
                     parties receive the update instantly.
                 </p>
-                <div class="diagram-box" style="margin-top: 16px;">
-Pub/Sub: Devices publish, subscribers receive
+                <div class="diagram" style="margin-top: 16px;">
+                    <pre class="mermaid">
+flowchart LR
+    subgraph devices["HEI Devices"]
+        B["Battery"]
+        S["Solar"]
+        P["Smart Panel"]
+        C["EV Charger"]
+        H["HEMS"]
+    end
 
-    Battery ──publish──┐
-    Solar ────publish──┤
-    Panel ────publish──┼──► MQTT Broker ──► All Subscribers
-    Charger ──publish──┤         │
-    HEMS ─────subscribe─────────┘
+    subgraph broker["MQTT Broker"]
+        MB[("Broker")]
+    end
 
-Total: 5 broker connections, updates only on change
+    B -->|"publish"| MB
+    S -->|"publish"| MB
+    P -->|"publish"| MB
+    C -->|"publish"| MB
+    MB <-->|"subscribe"| H
+    MB -.->|"fan out"| B
+    MB -.->|"fan out"| S
+    MB -.->|"fan out"| P
+    MB -.->|"fan out"| C
+
+    style MB fill:#ecfdf5,stroke:#10b981,stroke-width:2px
+                    </pre>
+                    <p class="diagram-caption">
+                        Pub/Sub: Each device publishes once, broker fans out to all subscribers.<br>
+                        5 broker connections, updates only when data changes.
+                    </p>
                 </div>
             </div>
 
@@ -388,5 +408,21 @@ Total: 5 broker connections, updates only on change
             <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
         </div>
     </footer>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#eff6ff',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#2563eb',
+                lineColor: '#64748b',
+                secondaryColor: '#ecfdf5',
+                tertiaryColor: '#f8fafc'
+            }
+        });
+    </script>
 </body>
 </html>

@@ -114,16 +114,25 @@
             font-size: 1.2rem;
         }
 
-        .diagram-box {
+        .diagram {
             background: white;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
+            border-radius: 12px;
+            padding: 32px;
             margin: 24px 0;
-            font-family: monospace;
+            text-align: center;
+        }
+
+        .diagram .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-caption {
+            margin-top: 16px;
             font-size: 0.9rem;
-            line-height: 1.8;
-            overflow-x: auto;
+            color: var(--gray);
+            font-style: italic;
         }
 
         .impact-list {
@@ -149,6 +158,19 @@
 
         .solution-box h4 {
             color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box h4 {
+            color: #d97706;
             margin-bottom: 8px;
         }
 
@@ -186,8 +208,8 @@
                 <a href="../index.html#problem">Challenges</a>
                 <a href="../index.html#devices">Devices</a>
                 <a href="../index.html#principles">Principles</a>
-                <a href="../index.html#adapters">Adapters</a>
-                <a href="https://github.com/electrification-bus">GitHub</a>
+                <a href="../index.html#adapters">Relationship to Other Standards</a>
+                <a href="../index.html#resources">Resources</a>
             </nav>
         </div>
     </header>
@@ -239,23 +261,36 @@
                     <li>Another device that can fail</li>
                     <li>Redundant measurement of data the solar inverter already knows</li>
                 </ul>
-                <div class="diagram-box">
-Solar Inverter ──────────────────────────────────────────► Inverter Cloud
-    │                                                         (production data)
-    │ (power flow)
-    │
-    ├──────────────────┐
-    │                  │
-    ▼                  ▼
-Main Panel      Neurio CT Meter ──► Tesla Gateway ──► Tesla Cloud
-                  (redundant!)           │
-                                         │
-                                    Powerwall
-                                         │
-                                         ▼
-                                 (finally knows solar
-                                  production, but via
-                                  redundant hardware)
+                <div class="diagram">
+                    <pre class="mermaid">
+flowchart TB
+    subgraph clouds["Cloud Services"]
+        IC["Inverter Cloud<br/>(has production data)"]
+        TC["Tesla Cloud"]
+    end
+
+    subgraph home["Home Installation"]
+        SI["Solar<br/>Inverter"]
+        MP["Main<br/>Panel"]
+        CT["Neurio CT Meter<br/>(redundant!)"]
+        TG["Tesla Gateway"]
+        PW["Powerwall"]
+    end
+
+    SI -->|"production data"| IC
+    SI -->|"power flow"| MP
+    SI -.->|"CT clamp measures<br/>what inverter already knows"| CT
+    CT -->|"redundant data"| TG
+    TG --> TC
+    TG --> PW
+
+    style CT fill:#fef2f2,stroke:#ef4444,stroke-width:2px
+    style IC fill:#e0e7ff,stroke:#6366f1
+    style TC fill:#e0e7ff,stroke:#6366f1
+                    </pre>
+                    <p class="diagram-caption">
+                        The Powerwall finally knows solar production, but only via redundant hardware
+                    </p>
                 </div>
             </div>
 
@@ -294,6 +329,28 @@ Main Panel      Neurio CT Meter ──► Tesla Gateway ──► Tesla Cloud
                 </li>
             </ul>
 
+            <h2 id="frequency-shifting">Lack of Direct Controls Problem</h2>
+            <p>
+                When devices can't communicate directly, they resort to indirect workarounds that cause
+                unintended side effects.
+            </p>
+
+            <div class="example-box">
+                <h3>Real-World Example: Tesla Powerwall + Solar Curtailment</h3>
+                <p>
+                    When off-grid with high state of charge and excess solar production, a Tesla Powerwall
+                    needs to curtail PV output. Since it can't communicate with the solar inverter, it
+                    shifts the line frequency out of spec, triggering the solar inverter's safety shutdown.
+                </p>
+                <p>This causes side effects:</p>
+                <ul>
+                    <li>Light dimmers flicker from the frequency change</li>
+                    <li>Household UPS units detect the frequency anomaly as a power failure</li>
+                    <li>UPS units switch to battery, drain quickly, and drop network equipment</li>
+                    <li>Result: You lose internet/computing during an outage even though you have power!</li>
+                </ul>
+            </div>
+
             <div class="solution-box">
                 <h4>How eBus Solves This</h4>
                 <p>
@@ -302,9 +359,8 @@ Main Panel      Neurio CT Meter ──► Tesla Gateway ──► Tesla Cloud
                     no redundant hardware, no custom integrations, no manufacturer involvement required.
                 </p>
                 <p>
-                    When your solar inverter publishes its production to <code>homie/solar-001/pv/power</code>,
-                    your battery, smart panel, EV charger, and HEMS can all subscribe and receive updates
-                    in real-time.
+                    When your solar inverter publishes its production, your battery, smart panel, EV charger,
+                    and HEMS can all subscribe and receive updates in real-time.
                 </p>
             </div>
 
@@ -317,5 +373,21 @@ Main Panel      Neurio CT Meter ──► Tesla Gateway ──► Tesla Cloud
             <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
         </div>
     </footer>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#eff6ff',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#2563eb',
+                lineColor: '#64748b',
+                secondaryColor: '#ecfdf5',
+                tertiaryColor: '#f8fafc'
+            }
+        });
+    </script>
 </body>
 </html>

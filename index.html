@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eBus - Electrification Bus | Home Energy Infrastructure Interoperability</title>
+    <title>eBus - Electrification Bus | Home Energy Infrastructure Device Interoperability</title>
     <meta name="description" content="eBus (Electrification Bus) is an open interoperability framework enabling Home Energy Infrastructure devices to communicate and coordinate using MQTT, mDNS, and the Homie Convention.">
     <style>
         :root {
@@ -486,11 +486,11 @@
         <div class="container">
             <a href="#" class="logo">e<span>Bus</span></a>
             <nav>
-                <a href="#problem">Problem</a>
+                <a href="#problem">Challenges</a>
                 <a href="#devices">Devices</a>
                 <a href="#principles">Principles</a>
-                <a href="#adapters">Adapters</a>
-                <a href="https://github.com/electrification-bus">GitHub</a>
+                <a href="#adapters">Relationship to Other Standards</a>
+                <a href="#resources">Resources</a>
             </nav>
         </div>
     </header>
@@ -557,7 +557,7 @@
                     <h3>Single DER Limitation</h3>
                     <p>
                         The Microgrid Interconnect Device (MID) is typically integrated into a single
-                        grid-forming DER and cannot coordinate with additional DERs.
+                        grid-forming Distributed Energy Resource (DER) and cannot coordinate with additional DERs.
                     </p>
                     <span class="learn-more">Learn more</span>
                 </a>
@@ -582,7 +582,7 @@
             </p>
             <div class="devices-grid">
                 <div class="device-item">
-                    <div class="icon">📊</div>
+                    <div class="icon">🎛️</div>
                     <h4>Smart Panels</h4>
                     <p>Intelligent electrical panels</p>
                 </div>
@@ -594,7 +594,7 @@
                 <div class="device-item">
                     <div class="icon">☀️</div>
                     <h4>Solar PV Systems</h4>
-                    <p>Rooftop and ground-mount solar</p>
+                    <p>Rooftop &amp; ground-mount solar</p>
                 </div>
                 <div class="device-item">
                     <div class="icon">🏠</div>
@@ -604,22 +604,22 @@
                 <div class="device-item">
                     <div class="icon">🚗</div>
                     <h4>EV Chargers</h4>
-                    <p>EVSE including V2X bidirectional</p>
+                    <p>EVSE including bidirectional V2H</p>
                 </div>
                 <div class="device-item">
-                    <div class="icon">📏</div>
+                    <div class="icon">⏲️</div>
                     <h4>Energy Meters</h4>
                     <p>Circuit and whole-home metering</p>
                 </div>
                 <div class="device-item">
-                    <div class="icon">⚙️</div>
+                    <div class="icon">⛽</div>
                     <h4>Generators</h4>
                     <p>Portable and permanent backup</p>
                 </div>
                 <div class="device-item">
                     <div class="icon">🔀</div>
                     <h4>MIDs &amp; Transfer Switches</h4>
-                    <p>Microgrid interconnect devices</p>
+                    <p>Required safety devices for power-exporting homes</p>
                 </div>
             </div>
         </div>
@@ -644,7 +644,9 @@
                 </div>
                 <div class="principle-card">
                     <h3>Network Discovery</h3>
-                    <span class="tech">Multicast DNS (mDNS)</span>
+                    <ul class="tech-list">
+                        <li>Multicast DNS (mDNS)</li>
+                    </ul>
                     <p>Devices advertise their existence and capabilities via mDNS, and discover other devices automatically by listening for broadcasts.</p>
                 </div>
                 <div class="principle-card">
@@ -657,7 +659,9 @@
                 </div>
                 <div class="principle-card">
                     <h3>REST APIs</h3>
-                    <span class="tech">HTTP &amp; JSON</span>
+                    <ul class="tech-list">
+                        <li>HTTP &amp; JSON</li>
+                    </ul>
                     <p>REST APIs complement pub/sub when complex request/response semantics are needed, or for device configuration and administration tasks.</p>
                 </div>
                 <div class="principle-card">
@@ -671,7 +675,9 @@
                 </div>
                 <div class="principle-card">
                     <h3>Security</h3>
-                    <span class="tech">TLS &amp; mTLS</span>
+                    <ul class="tech-list">
+                        <li>TLS &amp; mTLS</li>
+                    </ul>
                     <p>Secure authentication and authorization for control of home power and energy. Measurements and state have significant privacy implications.</p>
                 </div>
             </div>
@@ -701,14 +707,47 @@
         </div>
     </section>
 
+    <section id="standards">
+        <div class="container">
+            <h2>Comparison to Other Standards</h2>
+            <p class="section-subtitle">
+                eBus focuses specifically on Home Energy Infrastructure device interoperability.
+                It complements rather than competes with other standards.
+            </p>
+            <div class="problem-grid">
+                <div class="problem-card" style="cursor: default;">
+                    <div class="icon">🏠</div>
+                    <h3>Not General IoT</h3>
+                    <p>
+                        eBus is not for general smart home devices like lights, locks, or sensors.
+                        The Matter standard serves that space well. eBus endorses &amp; anticipates
+                        that high-load home appliances will support Matter energy management,
+                        especially the "Device Energy Management" cluster. eBus focuses on the home's
+                        critical electrical infrastructure: batteries, solar, panels, and meters.
+                    </p>
+                </div>
+                <div class="problem-card" style="cursor: default;">
+                    <div class="icon">⚡</div>
+                    <h3>Not Grid Coordination</h3>
+                    <p>
+                        eBus is not for utility-to-customer demand response signaling.
+                        Standards like OpenADR-3 and IEEE 2030.5 handle that domain.
+                        eBus enables local device coordination once signals are received.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="adapters" class="section-alt">
         <div class="container">
-            <h2>Adapters &amp; Proxies</h2>
+            <h2>eBus Embraces Other Standards</h2>
             <div class="adapters-intro">
                 <p>
-                    <strong>What if a device doesn't support eBus?</strong> Any eBus device (a "rider")
-                    can integrate with non-eBus devices ("pedestrians") by any means necessary, then
-                    publish that data to the eBus broker using the Homie convention.
+                    eBus adapters bridge to other protocols, enabling integration with devices that use
+                    different standards. Any eBus device (a "rider") can integrate with non-eBus devices
+                    ("pedestrians") by any means necessary, then publish that data to the eBus broker
+                    using the Homie convention.
                 </p>
                 <p>
                     Once one rider adapts a pedestrian device, all eBus riders benefit. Adapters can be
@@ -716,8 +755,16 @@
                 </p>
             </div>
             <div class="adapter-examples">
+                <a href="adapters/matter.html" class="adapter-card">
+                    <h4>Matter</h4>
+                    <p>
+                        Bridge Matter-enabled thermostats and devices to eBus. Read HVAC status
+                        and send commands to adjust setpoints and modes for energy shifting.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
                 <a href="adapters/cta-2045.html" class="adapter-card">
-                    <h4>CTA-2045 Adapter</h4>
+                    <h4>CTA-2045</h4>
                     <p>
                         Control water heaters and other appliances with EcoPort interfaces.
                         The adapter translates CTA-2045 binary messages to eBus/Homie topics,
@@ -725,16 +772,8 @@
                     </p>
                     <span class="learn-more">Learn more</span>
                 </a>
-                <a href="adapters/matter.html" class="adapter-card">
-                    <h4>Matter Adapter</h4>
-                    <p>
-                        Bridge Matter-enabled thermostats and devices to eBus. Read HVAC status
-                        and send commands to adjust setpoints and modes for energy shifting.
-                    </p>
-                    <span class="learn-more">Learn more</span>
-                </a>
                 <a href="adapters/legacy.html" class="adapter-card">
-                    <h4>Legacy Device Adapters</h4>
+                    <h4>Legacy Devices</h4>
                     <p>
                         Poll REST APIs or communicate via Modbus/RS-485 with existing devices,
                         then proxy their data to eBus topics.
@@ -747,7 +786,7 @@
 
     <section class="cta-section">
         <div class="container">
-            <h2>Hop Aboard the eBus</h2>
+            <h2>Hop Aboard the eBus!</h2>
             <div class="cta-grid">
                 <div class="cta-card">
                     <h3>Device Manufacturers</h3>
@@ -774,23 +813,19 @@
         </div>
     </section>
 
-    <footer>
+    <footer id="resources">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-col">
-                    <h4>eBus</h4>
-                    <p>
-                        Electrification Bus - an open interoperability framework for Home Energy Infrastructure devices.
-                    </p>
-                </div>
-                <div class="footer-col">
                     <h4>Resources</h4>
                     <a href="https://github.com/electrification-bus">GitHub</a>
+                    <a href="https://electrificationbus.slack.com">Slack</a>
+                    <a href="mailto:contact@electrification-bus.org">Email Contact</a>
                     <a href="https://homieiot.github.io/">Homie Convention</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>eBus (Electrification Bus) - Open Source Home Energy Interoperability</p>
+                <p>eBus (Electrification Bus) - Home Energy Infrastructure Device Interoperability</p>
             </div>
         </div>
     </footer>

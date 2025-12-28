@@ -114,15 +114,38 @@
             font-size: 1.2rem;
         }
 
-        .code-block {
-            background: var(--dark);
-            color: #e2e8f0;
-            border-radius: 8px;
-            padding: 24px;
-            margin: 24px 0;
-            font-family: monospace;
+        .process-list {
+            counter-reset: process-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .process-list li {
+            counter-increment: process-counter;
+            position: relative;
+            padding-left: 48px;
+            margin-bottom: 12px;
+        }
+
+        .process-list li::before {
+            content: counter(process-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
             font-size: 0.9rem;
-            overflow-x: auto;
+        }
+
+        .process-list li.repeat::before {
+            background: #dc2626;
         }
 
         .impact-list {
@@ -185,8 +208,8 @@
                 <a href="../index.html#problem">Challenges</a>
                 <a href="../index.html#devices">Devices</a>
                 <a href="../index.html#principles">Principles</a>
-                <a href="../index.html#adapters">Adapters</a>
-                <a href="https://github.com/electrification-bus">GitHub</a>
+                <a href="../index.html#adapters">Relationship to Other Standards</a>
+                <a href="../index.html#resources">Resources</a>
             </nav>
         </div>
     </header>
@@ -275,19 +298,18 @@
 
             <div class="example-box">
                 <h3>The Integration Developer Experience</h3>
-                <div class="code-block">
-# Typical integration development process:
-
-1. Search online for "[device] local API"
-2. Find a 3-year-old GitHub repo with partial documentation
-3. Discover half the endpoints no longer work
-4. Sniff network traffic from the mobile app
-5. Guess at authentication requirements
-6. Trial-and-error to figure out request formats
-7. Build working integration
-8. Firmware update breaks everything
-9. Return to step 4
-                </div>
+                <p>Typical integration development process:</p>
+                <ol class="process-list">
+                    <li>Search online for "[device] local API"</li>
+                    <li>Find a 3-year-old GitHub repo with partial documentation</li>
+                    <li>Discover half the endpoints no longer work</li>
+                    <li>Sniff network traffic from the mobile app</li>
+                    <li>Guess at authentication requirements</li>
+                    <li>Trial-and-error to figure out request formats</li>
+                    <li>Build working integration</li>
+                    <li class="repeat">Firmware update breaks everything</li>
+                    <li class="repeat">Return to step 4</li>
+                </ol>
             </div>
 
             <h2>Why This Happens</h2>
@@ -329,25 +351,6 @@
                     integrate with any device - no external documentation required. The schema
                     is always current because it comes directly from the device.
                 </p>
-                <div class="code-block" style="margin-top: 16px;">
-# eBus device self-description via Homie Convention
-
-homie/battery-001/$homie → "5.0"
-homie/battery-001/$name → "Powerwall 2"
-homie/battery-001/$state → "ready"
-homie/battery-001/$nodes → "battery,grid,solar"
-
-homie/battery-001/battery/$name → "Battery"
-homie/battery-001/battery/$properties → "soe,power,capacity"
-
-homie/battery-001/battery/soe/$name → "State of Energy"
-homie/battery-001/battery/soe/$datatype → "float"
-homie/battery-001/battery/soe/$unit → "%"
-homie/battery-001/battery/soe/$format → "0:100"
-homie/battery-001/battery/soe → "85.2"
-
-# No external docs needed - the device tells you everything!
-                </div>
             </div>
 
             <a href="../index.html#problem" class="back-link">Back to Challenges</a>
