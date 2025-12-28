@@ -512,8 +512,8 @@
         <div class="container">
             <h2>The Integration Challenge</h2>
             <p class="section-subtitle">
-                Modern homes have multiple energy devices from different manufacturers,
-                which don't work together effectively.
+                Modern homes have multiple energy infrastructure devices from different manufacturers,
+                which don't work together effectively, or at all!
             </p>
             <div class="problem-grid">
                 <a href="challenges/siloed-devices.html" class="problem-card">
@@ -521,8 +521,9 @@
                     <h3>Siloed Devices</h3>
                     <p>
                         Each device meters what it can, but doesn't share, resulting in unnecessary
-                        remote-meter workarounds, adding cost and complexity. A device cannot directly
-                        control the critical power functions of another device.
+                        remote-meter workarounds, adding cost and complexity.<br>
+                        Devices cannot directly
+                        control the critical power functions of other devices.
                     </p>
                     <span class="learn-more">Learn more</span>
                 </a>
@@ -557,8 +558,8 @@
                     <div class="icon">⚡</div>
                     <h3>Single DER Limitation</h3>
                     <p>
-                        The Microgrid Interconnect Device (MID) is typically integrated into a single
-                        grid-forming Distributed Energy Resource (DER) and cannot coordinate with additional DERs.
+                        Today the Microgrid Interconnect Device (MID) is integrated into a single
+                        grid-forming Distributed Energy Resource (DER) and cannot support additional DERs.
                     </p>
                     <span class="learn-more">Learn more</span>
                 </a>
@@ -615,7 +616,7 @@
                 <div class="device-item">
                     <div class="icon">🔀</div>
                     <h4>MIDs &amp; Transfer Switches</h4>
-                    <p>Required safety devices for power-exporting homes</p>
+                    <p>Required safety devices for power generating/exporting homes</p>
                 </div>
             </div>
         </div>
@@ -625,8 +626,8 @@
         <div class="container">
             <h2>eBus Framework Principles</h2>
             <p class="section-subtitle">
-                eBus is built on open, standard protocols that are practical to implement
-                on everything from microcontrollers to Linux Single Board Computers (SBCs).
+                eBus is built on existing open, standard protocols that are practical to implement
+                on everything from microcontrollers running a RTOS to single-board computers (SBCs) running Linux.
             </p>
             <div class="principles-grid">
                 <div class="principle-card">
@@ -708,7 +709,7 @@
             <h2>Relationship to Other Standards</h2>
             <p class="section-subtitle">
                 eBus focuses specifically on Home Energy Infrastructure Device interoperability.<br>
-                It complements rather than competes with other standards.
+                <a href="https://xkcd.com/927/" style="color: inherit;">eBus complements, rather than competes, with other standards.</a>
             </p>
             <div class="problem-grid">
                 <div class="problem-card" style="cursor: default;">
@@ -716,8 +717,7 @@
                     <h3>General IoT</h3>
                     <p>
                         eBus is not intended for general smart home devices like lights, locks, or sensors,
-                        the Matter standard serves that space well. eBus anticipates &amp; endorses
-                        that high-load home appliances will support Matter energy management,
+                        the Matter standard serves that space well. eBus anticipates &amp; expects high-load home appliances will support Matter energy management,
                         especially the "Device Energy Management" cluster. eBus focuses on the home's
                         critical electrical infrastructure: batteries, solar, panels, and meters.
                     </p>
@@ -770,7 +770,7 @@
                     <span class="learn-more">Learn more</span>
                 </a>
                 <a href="adapters/legacy.html" class="adapter-card">
-                    <h4>Legacy Devices</h4>
+                    <h4>Legacy Protocols &amp; Devices</h4>
                     <p>
                         Poll REST APIs or communicate via Modbus/RS-485 with existing devices,
                         then proxy their data to eBus topics.
