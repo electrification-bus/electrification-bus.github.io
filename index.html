@@ -489,7 +489,7 @@
                 <a href="#problem">Challenges</a>
                 <a href="#devices">Devices</a>
                 <a href="#principles">Principles</a>
-                <a href="#adapters">Relationship to Other Standards</a>
+                <a href="#standards">Relationship to Other Standards</a>
                 <a href="#resources">Resources</a>
             </nav>
         </div>
@@ -501,7 +501,7 @@
             <p class="full-name">eBus for short!</p>
             <p class="subtitle">
                 An open framework enabling home energy infrastructure devices to discover, communicate,
-                and coordinate using standard protocols.
+                and coordinate using open, standard protocols.
             </p>
             <a href="https://github.com/electrification-bus" class="btn btn-primary">View on GitHub</a>
             <a href="#principles" class="btn btn-secondary">Learn More</a>
@@ -513,7 +513,7 @@
             <h2>The Integration Challenge</h2>
             <p class="section-subtitle">
                 Modern homes have multiple energy devices from different manufacturers,
-                but don't work together effectively.
+                which don't work together effectively.
             </p>
             <div class="problem-grid">
                 <a href="challenges/siloed-devices.html" class="problem-card">
@@ -521,7 +521,8 @@
                     <h3>Siloed Devices</h3>
                     <p>
                         Each device meters what it can, but doesn't share, resulting in unnecessary
-                        remote-meter workarounds, adding cost and complexity.
+                        remote-meter workarounds, adding cost and complexity. A device cannot directly
+                        control the critical power functions of another device.
                     </p>
                     <span class="learn-more">Learn more</span>
                 </a>
@@ -529,7 +530,7 @@
                     <div class="icon">🌐</div>
                     <h3>Cloud Dependency</h3>
                     <p>
-                        Cloud APIs have latency and reliability issues, and often fail during
+                        Cloud APIs have serious latency and reliability issues, and often fail during
                         grid outages when local coordination is needed most.
                     </p>
                     <span class="learn-more">Learn more</span>
@@ -538,8 +539,8 @@
                     <div class="icon">🔄</div>
                     <h3>Polling Overload</h3>
                     <p>
-                        Using REST APIs for constantly changing meter data forces polling by every client,
-                        creating many-to-many connections where devices hammer each other for data.
+                        Tracking rapidly changing metering data via a REST API forces polling by every client,
+                        forcing many-to-many connections, with devices hammering each other for data.
                     </p>
                     <span class="learn-more">Learn more</span>
                 </a>
@@ -576,15 +577,15 @@
 
     <section id="devices" class="section-alt">
         <div class="container">
-            <h2>Home Energy Infrastructure Devices</h2>
+            <h2>Home Energy Infrastructure (HEI) Devices</h2>
             <p class="section-subtitle">
                 eBus focuses on the devices that provide and support the electrical system of a home.
             </p>
             <div class="devices-grid">
                 <div class="device-item">
                     <div class="icon">🎛️</div>
-                    <h4>Smart Panels</h4>
-                    <p>Intelligent electrical panels</p>
+                    <h4>Electric Panels</h4>
+                    <p>Smart electric panels</p>
                 </div>
                 <div class="device-item">
                     <div class="icon">🔋</div>
@@ -602,7 +603,7 @@
                     <p>Home Energy Management Systems</p>
                 </div>
                 <div class="device-item">
-                    <div class="icon">⏲️</div>
+                    <div class="icon">📊</div>
                     <h4>Energy Meters</h4>
                     <p>Circuit and whole-home metering</p>
                 </div>
@@ -648,7 +649,7 @@
                     <h3>Publish/Subscribe Messaging</h3>
                     <ul class="tech-list">
                         <li>MQTT</li>
-                        <li>Homie</li>
+                        <li><a href="https://homieiot.github.io/" style="color: inherit; text-decoration: underline;">Homie</a></li>
                     </ul>
                     <p>Publish/subscribe first. Devices publish state to MQTT topics; others subscribe to what they need. The Homie Convention provides standardized topic structure with self-describing schemas, datatypes, units of measure, and device lifecycle management.</p>
                 </div>
@@ -662,7 +663,7 @@
                 <div class="principle-card">
                     <h3>Self-Documenting Introspectable APIs</h3>
                     <ul class="tech-list">
-                        <li>Homie Description Schema</li>
+                        <li><a href="https://homieiot.github.io/specification/#device-attributes" style="color: inherit; text-decoration: underline;">Homie Description Schema</a></li>
                         <li>OpenAPI</li>
                         <li>JSON Schema</li>
                     </ul>
@@ -704,18 +705,18 @@
 
     <section id="standards">
         <div class="container">
-            <h2>Comparison to Other Standards</h2>
+            <h2>Relationship to Other Standards</h2>
             <p class="section-subtitle">
-                eBus focuses specifically on Home Energy Infrastructure device interoperability.
+                eBus focuses specifically on Home Energy Infrastructure Device interoperability.<br>
                 It complements rather than competes with other standards.
             </p>
             <div class="problem-grid">
                 <div class="problem-card" style="cursor: default;">
                     <div class="icon">🏠</div>
-                    <h3>Not General IoT</h3>
+                    <h3>General IoT</h3>
                     <p>
-                        eBus is not intended for general smart home devices like lights, locks, or sensors.
-                        The Matter standard serves that space well. eBus endorses &amp; anticipates
+                        eBus is not intended for general smart home devices like lights, locks, or sensors,
+                        the Matter standard serves that space well. eBus anticipates &amp; endorses
                         that high-load home appliances will support Matter energy management,
                         especially the "Device Energy Management" cluster. eBus focuses on the home's
                         critical electrical infrastructure: batteries, solar, panels, and meters.
@@ -723,10 +724,10 @@
                 </div>
                 <div class="problem-card" style="cursor: default;">
                     <div class="icon">⚡</div>
-                    <h3>Not Grid Coordination</h3>
+                    <h3>Grid Coordination</h3>
                     <p>
-                        eBus is not for utility-to-customer demand response signaling.
-                        Standards like OpenADR-3 and IEEE 2030.5 handle that domain.
+                        eBus is not for utility-to-customer grid-coordination (e.g. highly dynamic pricing,
+                        operating envelope control, and demand response events). OpenADR 3 and IEEE 2030.5 handle that domain.
                         eBus enables local device coordination once signals are received.
                     </p>
                 </div>
@@ -740,13 +741,14 @@
             <div class="adapters-intro">
                 <p>
                     eBus adapters bridge to other protocols, enabling integration with devices that use
-                    different standards. Any eBus device (a "rider") can integrate with non-eBus devices
+                    different standards.<br>
+                    Any eBus device (a "rider") can integrate with non-eBus devices
                     ("pedestrians") by any means necessary, then publish that data to the eBus broker
                     using the Homie convention.
                 </p>
                 <p>
-                    Once one rider adapts a pedestrian device, all eBus riders benefit. Adapters can be
-                    implemented by anyone, anywhere on the home LAN.
+                    Once one rider adapts a pedestrian device, all eBus riders benefit.<br>
+                    Adapters can be implemented by anyone, anywhere on the home LAN.
                 </p>
             </div>
             <div class="adapter-examples">
