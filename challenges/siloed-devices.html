@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siloed Devices | Integration Challenges | eBus</title>
+    <meta name="description" content="HEI devices meter what they can but don't share data, forcing redundant metering and adding cost and complexity.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover { opacity: 1; }
+
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content { padding: 32px 0 80px; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content p { margin-bottom: 16px; color: var(--dark); }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li { margin-bottom: 8px; }
+
+        .example-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .example-box h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .diagram-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .impact-list {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .solution-box {
+            background: #ecfdf5;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution-box h4 {
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+        .back-link::before { content: '← '; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Challenges</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#problem">Challenges</a> / Siloed Devices
+        </div>
+
+        <div class="content">
+            <h1>Siloed Devices</h1>
+            <p class="subtitle">
+                Every HEI device is metering what it has/can, but not sharing!
+            </p>
+
+            <h2>The Problem</h2>
+            <p>
+                Home Energy Infrastructure devices are inherently measurement devices. A battery system
+                knows its state of charge. A solar inverter knows its power output. A smart panel knows
+                circuit-level consumption. An EV charger knows the charging current.
+            </p>
+            <p>
+                Yet despite all this valuable data being collected, HEI devices operate in silos.
+                Each device keeps its measurements to itself, or at best shares them with its own
+                manufacturer's cloud service.
+            </p>
+
+            <h2>The Redundant Metering Problem</h2>
+            <p>
+                When Device A needs to know what's happening at Device B, Device A must provide an
+                unnecessary and redundant remote meter, adding cost and complexity to the installation.
+            </p>
+
+            <div class="example-box">
+                <h3>Real-World Example: Tesla Powerwall + Solar</h3>
+                <p>
+                    Tesla Powerwall requires knowledge of solar production to optimize battery charging
+                    and avoid backfeeding the grid during outages. However, if you have a non-Tesla
+                    solar system (Enphase, SolarEdge, etc.), the Powerwall can't access your solar
+                    inverter's production data.
+                </p>
+                <p>
+                    <strong>Tesla's solution:</strong> Require installation of a Neurio CT meter on
+                    the solar circuit. This adds:
+                </p>
+                <ul>
+                    <li>$150-300 additional hardware cost</li>
+                    <li>Additional installation time and labor</li>
+                    <li>Another device that can fail</li>
+                    <li>Redundant measurement of data the solar inverter already knows</li>
+                </ul>
+                <div class="diagram-box">
+Solar Inverter ──────────────────────────────────────────► Inverter Cloud
+    │                                                         (production data)
+    │ (power flow)
+    │
+    ├──────────────────┐
+    │                  │
+    ▼                  ▼
+Main Panel      Neurio CT Meter ──► Tesla Gateway ──► Tesla Cloud
+                  (redundant!)           │
+                                         │
+                                    Powerwall
+                                         │
+                                         ▼
+                                 (finally knows solar
+                                  production, but via
+                                  redundant hardware)
+                </div>
+            </div>
+
+            <h2>Why Devices Don't Share</h2>
+            <ul>
+                <li><strong>No standard protocol:</strong> There's no agreed-upon way for HEI devices to publish their measurements</li>
+                <li><strong>Competitive moats:</strong> Manufacturers benefit when their devices only work well with their other products</li>
+                <li><strong>Cloud-centric architectures:</strong> Data flows to manufacturer clouds, not to neighboring devices</li>
+                <li><strong>Security concerns:</strong> Opening local APIs raises security and support questions</li>
+            </ul>
+
+            <div class="impact-list">
+                <h4>Impact on Homeowners</h4>
+                <ul>
+                    <li>Higher installation costs due to redundant metering hardware</li>
+                    <li>More complex installations with additional points of failure</li>
+                    <li>Suboptimal energy management due to incomplete system visibility</li>
+                    <li>Vendor lock-in - mixing brands becomes painful</li>
+                </ul>
+            </div>
+
+            <h2>Other Examples</h2>
+            <ul>
+                <li>
+                    <strong>Smart panels needing solar data:</strong> SPAN and similar panels want solar
+                    production data for their dashboards, requiring either a supported inverter or
+                    additional CTs.
+                </li>
+                <li>
+                    <strong>EV chargers needing grid status:</strong> V2H-capable chargers need to know
+                    if the grid is down before they can backfeed, but they can't ask the transfer switch.
+                </li>
+                <li>
+                    <strong>HEMS needing everything:</strong> Home Energy Management Systems need
+                    visibility into all devices but must integrate with each manufacturer separately.
+                </li>
+            </ul>
+
+            <div class="solution-box">
+                <h4>How eBus Solves This</h4>
+                <p>
+                    eBus provides a standard publish/subscribe framework where every device publishes
+                    its measurements to MQTT topics. Any device that needs data simply subscribes -
+                    no redundant hardware, no custom integrations, no manufacturer involvement required.
+                </p>
+                <p>
+                    When your solar inverter publishes its production to <code>homie/solar-001/pv/power</code>,
+                    your battery, smart panel, EV charger, and HEMS can all subscribe and receive updates
+                    in real-time.
+                </p>
+            </div>
+
+            <a href="../index.html#problem" class="back-link">Back to Challenges</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

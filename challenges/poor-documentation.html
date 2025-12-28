@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poor Documentation | Integration Challenges | eBus</title>
+    <meta name="description" content="HEI device integration APIs, if provided at all, are poorly documented and typically unsupported by manufacturers.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover { opacity: 1; }
+
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content { padding: 32px 0 80px; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content p { margin-bottom: 16px; color: var(--dark); }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li { margin-bottom: 8px; }
+
+        .example-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .example-box h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: var(--dark);
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .impact-list {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .solution-box {
+            background: #ecfdf5;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution-box h4 {
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+        .back-link::before { content: '← '; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Challenges</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#problem">Challenges</a> / Poor Documentation
+        </div>
+
+        <div class="content">
+            <h1>Poor Documentation</h1>
+            <p class="subtitle">
+                Device integration APIs, if provided at all, are poorly documented
+                and typically unsupported by manufacturers.
+            </p>
+
+            <h2>The Problem</h2>
+            <p>
+                Even when HEI devices expose local APIs, integrating with them is often an
+                exercise in frustration. Documentation is incomplete, outdated, or simply
+                doesn't exist. And when you run into problems, there's no support channel.
+            </p>
+
+            <h2>Common Documentation Issues</h2>
+
+            <h3>No Official Documentation</h3>
+            <p>
+                Many devices have local APIs that exist but are completely undocumented.
+                The only way to discover them is through network sniffing, reverse engineering,
+                or finding community-maintained unofficial documentation.
+            </p>
+
+            <div class="example-box">
+                <h3>Example: Tesla Local API</h3>
+                <p>
+                    The Tesla Powerwall Gateway has a local REST API that exposes extensive
+                    data about your system. However, Tesla provides no official documentation.
+                    Everything known about the API comes from community reverse-engineering efforts.
+                </p>
+                <p>Consequences:</p>
+                <ul>
+                    <li>Endpoints discovered by trial and error</li>
+                    <li>Response formats change without notice in firmware updates</li>
+                    <li>Authentication methods have changed multiple times</li>
+                    <li>No official support when integrations break</li>
+                </ul>
+            </div>
+
+            <h3>Incomplete Documentation</h3>
+            <p>
+                Some vendors provide documentation that covers basic functionality but omits
+                important details:
+            </p>
+            <ul>
+                <li>Error codes and their meanings</li>
+                <li>Rate limits and how to avoid them</li>
+                <li>Authentication token lifetimes and refresh procedures</li>
+                <li>Which fields are optional vs required</li>
+                <li>Units of measurement for numeric values</li>
+                <li>Valid ranges for settable parameters</li>
+            </ul>
+
+            <h3>Outdated Documentation</h3>
+            <p>
+                Documentation that existed when the product launched may not be updated
+                as firmware evolves:
+            </p>
+            <ul>
+                <li>New endpoints added but not documented</li>
+                <li>Old endpoints deprecated without notice</li>
+                <li>Response schemas change, breaking integrations</li>
+                <li>New authentication requirements introduced</li>
+            </ul>
+
+            <h2>The "Unsupported" Problem</h2>
+            <p>
+                Even when documentation exists, many manufacturers explicitly label local
+                APIs as "unsupported" - meaning:
+            </p>
+            <ul>
+                <li>No guarantee of stability between firmware versions</li>
+                <li>No support channel for integration issues</li>
+                <li>APIs may be removed at any time</li>
+                <li>Using them may void your warranty (though rarely enforced)</li>
+            </ul>
+
+            <div class="example-box">
+                <h3>The Integration Developer Experience</h3>
+                <div class="code-block">
+# Typical integration development process:
+
+1. Search online for "[device] local API"
+2. Find a 3-year-old GitHub repo with partial documentation
+3. Discover half the endpoints no longer work
+4. Sniff network traffic from the mobile app
+5. Guess at authentication requirements
+6. Trial-and-error to figure out request formats
+7. Build working integration
+8. Firmware update breaks everything
+9. Return to step 4
+                </div>
+            </div>
+
+            <h2>Why This Happens</h2>
+            <ul>
+                <li><strong>Support costs:</strong> Documented APIs create support expectations</li>
+                <li><strong>Liability concerns:</strong> Third-party integrations could cause safety issues</li>
+                <li><strong>Business model:</strong> Manufacturers want control over integrations</li>
+                <li><strong>Resource constraints:</strong> Documentation isn't prioritized</li>
+                <li><strong>Cloud preference:</strong> Manufacturers prefer cloud APIs they control</li>
+            </ul>
+
+            <div class="impact-list">
+                <h4>Impact on the Ecosystem</h4>
+                <ul>
+                    <li>Integration developers waste time reverse-engineering</li>
+                    <li>Integrations are fragile and break with updates</li>
+                    <li>Community knowledge is scattered and incomplete</li>
+                    <li>Innovation is stifled by uncertainty</li>
+                    <li>Homeowners can't rely on third-party integrations</li>
+                </ul>
+            </div>
+
+            <div class="solution-box">
+                <h4>How eBus Solves This</h4>
+                <p>
+                    eBus devices are required to be <strong>self-documenting</strong>. The Homie
+                    Convention mandates that devices publish their schema directly to MQTT topics,
+                    including:
+                </p>
+                <ul>
+                    <li>All available properties and their data types</li>
+                    <li>Units of measurement for numeric values</li>
+                    <li>Valid ranges and enumeration values</li>
+                    <li>Whether properties are readable, writable, or both</li>
+                    <li>Device state and lifecycle information</li>
+                </ul>
+                <p>
+                    A client connecting to an eBus broker can discover everything it needs to
+                    integrate with any device - no external documentation required. The schema
+                    is always current because it comes directly from the device.
+                </p>
+                <div class="code-block" style="margin-top: 16px;">
+# eBus device self-description via Homie Convention
+
+homie/battery-001/$homie → "5.0"
+homie/battery-001/$name → "Powerwall 2"
+homie/battery-001/$state → "ready"
+homie/battery-001/$nodes → "battery,grid,solar"
+
+homie/battery-001/battery/$name → "Battery"
+homie/battery-001/battery/$properties → "soe,power,capacity"
+
+homie/battery-001/battery/soe/$name → "State of Energy"
+homie/battery-001/battery/soe/$datatype → "float"
+homie/battery-001/battery/soe/$unit → "%"
+homie/battery-001/battery/soe/$format → "0:100"
+homie/battery-001/battery/soe → "85.2"
+
+# No external docs needed - the device tells you everything!
+                </div>
+            </div>
+
+            <a href="../index.html#problem" class="back-link">Back to Challenges</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

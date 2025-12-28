@@ -1,10 +1,798 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBus - Electrification Bus | Home Energy Infrastructure Interoperability</title>
+    <meta name="description" content="eBus (Electrification Bus) is an open interoperability framework enabling Home Energy Infrastructure devices to communicate and coordinate using MQTT, mDNS, and the Homie Convention.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, #334155 100%);
+            color: white;
+            padding: 80px 0 100px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hero h1 span {
+            color: var(--secondary);
+        }
+
+        .hero .full-name {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 32px;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            margin-left: 16px;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        section .section-subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 48px;
+            max-width: 700px;
+        }
+
+        .section-alt {
+            background: white;
+        }
+
+        /* Problem Section */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .problem-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .problem-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .problem-card p {
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .problem-card .icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .problem-card .learn-more {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .problem-card .learn-more::after {
+            content: ' →';
+        }
+
+        /* Devices Section */
+        .devices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .device-item {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .device-item .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .device-item h4 {
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .device-item p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Principles Section */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .principle-card {
+            border-left: 4px solid var(--primary);
+            padding-left: 24px;
+        }
+
+        .principle-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .principle-card .tech {
+            font-family: monospace;
+            background: var(--light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-right: 4px;
+        }
+
+        .principle-card p {
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        .principle-card .tech-list {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .principle-card .tech-list li {
+            font-family: monospace;
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 48px;
+            margin-top: 48px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 16px;
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Adapters Section */
+        .adapters-intro {
+            max-width: 800px;
+            margin-bottom: 48px;
+        }
+
+        .adapters-intro p {
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .adapter-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .adapter-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
+        }
+
+        .adapter-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .adapter-card h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .adapter-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .adapter-card .learn-more {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .adapter-card .learn-more::after {
+            content: ' →';
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 24px;
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .cta-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .cta-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+
+        .cta-card p {
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 48px 0 24px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .footer-col p, .footer-col a {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 24px;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.2rem;
+            }
+
+            .btn-secondary {
+                display: block;
+                margin: 16px auto 0;
+            }
+
+            nav {
+                display: none;
+            }
+
+            section {
+                padding: 48px 0;
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
 <body>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="#problem">Problem</a>
+                <a href="#devices">Devices</a>
+                <a href="#principles">Principles</a>
+                <a href="#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
 
-<h1>eBus</h1>
+    <section class="hero">
+        <div class="container">
+            <h1>Electrification <span>Bus</span></h1>
+            <p class="full-name">eBus for short!</p>
+            <p class="subtitle">
+                An open framework enabling home energy infrastructure devices to discover, communicate,
+                and coordinate using standard protocols.
+            </p>
+            <a href="https://github.com/electrification-bus" class="btn btn-primary">View on GitHub</a>
+            <a href="#principles" class="btn btn-secondary">Learn More</a>
+        </div>
+    </section>
 
-<p>My first paragraph.</p>
+    <section id="problem">
+        <div class="container">
+            <h2>The Integration Challenge</h2>
+            <p class="section-subtitle">
+                Modern homes have multiple energy devices from different manufacturers,
+                but don't work together effectively.
+            </p>
+            <div class="problem-grid">
+                <a href="challenges/siloed-devices.html" class="problem-card">
+                    <div class="icon">🔌</div>
+                    <h3>Siloed Devices</h3>
+                    <p>
+                        Each device meters what it can, but doesn't share, resulting in unnecessary
+                        remote-meter workarounds, adding cost and complexity.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="challenges/cloud-dependency.html" class="problem-card">
+                    <div class="icon">🌐</div>
+                    <h3>Cloud Dependency</h3>
+                    <p>
+                        Cloud APIs have latency and reliability issues, and often fail during
+                        grid outages when local coordination is needed most.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="challenges/polling-overload.html" class="problem-card">
+                    <div class="icon">🔄</div>
+                    <h3>Polling Overload</h3>
+                    <p>
+                        Using REST APIs for constantly changing meter data forces polling by every client,
+                        creating many-to-many connections where devices hammer each other for data.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="challenges/custom-integrations.html" class="problem-card">
+                    <div class="icon">🔧</div>
+                    <h3>Custom Integrations</h3>
+                    <p>
+                        Each device-to-device integration is a custom development effort
+                        requiring direct involvement from vendors.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="challenges/single-der-limitation.html" class="problem-card">
+                    <div class="icon">⚡</div>
+                    <h3>Single DER Limitation</h3>
+                    <p>
+                        The Microgrid Interconnect Device (MID) is typically integrated into a single
+                        grid-forming DER and cannot coordinate with additional DERs.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="challenges/poor-documentation.html" class="problem-card">
+                    <div class="icon">📋</div>
+                    <h3>Poor Documentation</h3>
+                    <p>
+                        Device integration APIs, if provided at all, are poorly documented
+                        and typically unsupported by manufacturers.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
+    <section id="devices" class="section-alt">
+        <div class="container">
+            <h2>Home Energy Infrastructure Devices</h2>
+            <p class="section-subtitle">
+                eBus focuses on the devices that provide and support the electrical system of a home.
+            </p>
+            <div class="devices-grid">
+                <div class="device-item">
+                    <div class="icon">📊</div>
+                    <h4>Smart Panels</h4>
+                    <p>Intelligent electrical panels</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">🔋</div>
+                    <h4>Energy Storage Systems</h4>
+                    <p>Home battery backup (BESS)</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">☀️</div>
+                    <h4>Solar PV Systems</h4>
+                    <p>Rooftop and ground-mount solar</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">🏠</div>
+                    <h4>HEMS</h4>
+                    <p>Home Energy Management Systems</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">🚗</div>
+                    <h4>EV Chargers</h4>
+                    <p>EVSE including V2X bidirectional</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">📏</div>
+                    <h4>Energy Meters</h4>
+                    <p>Circuit and whole-home metering</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">⚙️</div>
+                    <h4>Generators</h4>
+                    <p>Portable and permanent backup</p>
+                </div>
+                <div class="device-item">
+                    <div class="icon">🔀</div>
+                    <h4>MIDs &amp; Transfer Switches</h4>
+                    <p>Microgrid interconnect devices</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principles">
+        <div class="container">
+            <h2>eBus Framework Principles</h2>
+            <p class="section-subtitle">
+                eBus is built on open, standard protocols that are practical to implement
+                on everything from microcontrollers to full Linux systems.
+            </p>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <h3>IP Networking</h3>
+                    <ul class="tech-list">
+                        <li>Ethernet</li>
+                        <li>Wi-Fi</li>
+                        <li>Thread</li>
+                    </ul>
+                    <p>Standard IP networking provides the foundation. Hardwired Ethernet is preferred for reliability; Wi-Fi and Thread offer flexibility where needed.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Network Discovery</h3>
+                    <span class="tech">Multicast DNS (mDNS)</span>
+                    <p>Devices advertise their existence and capabilities via mDNS, and discover other devices automatically by listening for broadcasts.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Publish/Subscribe Messaging</h3>
+                    <ul class="tech-list">
+                        <li>MQTT</li>
+                        <li>Homie</li>
+                    </ul>
+                    <p>Publish/subscribe first. Devices publish state to MQTT topics; others subscribe to what they need. The Homie Convention provides standardized topic structure with self-describing schemas, datatypes, units of measure, and device lifecycle management.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>REST APIs</h3>
+                    <span class="tech">HTTP &amp; JSON</span>
+                    <p>REST APIs complement pub/sub when complex request/response semantics are needed, or for device configuration and administration tasks.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Self-Documenting Introspectable APIs</h3>
+                    <ul class="tech-list">
+                        <li>Homie Description Schema</li>
+                        <li>OpenAPI</li>
+                        <li>JSON Schema</li>
+                    </ul>
+                    <p>Devices publish their interface specifications locally, enabling automatic discovery and integration without external documentation.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>Security</h3>
+                    <span class="tech">TLS &amp; mTLS</span>
+                    <p>Secure authentication and authorization for control of home power and energy. Measurements and state have significant privacy implications.</p>
+                </div>
+            </div>
+
+            <div class="how-it-works">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Discover</h3>
+                    <p>Devices find each other on the local network via mDNS broadcasts</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Connect</h3>
+                    <p>Devices connect to the local MQTT broker (or bridge their own)</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Publish</h3>
+                    <p>Each device publishes its status, state, and measurements to topics</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Coordinate</h3>
+                    <p>Devices subscribe to topics they need and send commands to coordinate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="adapters" class="section-alt">
+        <div class="container">
+            <h2>Adapters &amp; Proxies</h2>
+            <div class="adapters-intro">
+                <p>
+                    <strong>What if a device doesn't support eBus?</strong> Any eBus device (a "rider")
+                    can integrate with non-eBus devices ("pedestrians") by any means necessary, then
+                    publish that data to the eBus broker using the Homie convention.
+                </p>
+                <p>
+                    Once one rider adapts a pedestrian device, all eBus riders benefit. Adapters can be
+                    implemented by anyone, anywhere on the home LAN.
+                </p>
+            </div>
+            <div class="adapter-examples">
+                <a href="adapters/cta-2045.html" class="adapter-card">
+                    <h4>CTA-2045 Adapter</h4>
+                    <p>
+                        Control water heaters and other appliances with EcoPort interfaces.
+                        The adapter translates CTA-2045 binary messages to eBus/Homie topics,
+                        enabling HEMS to send shed and load-up commands.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="adapters/matter.html" class="adapter-card">
+                    <h4>Matter Adapter</h4>
+                    <p>
+                        Bridge Matter-enabled thermostats and devices to eBus. Read HVAC status
+                        and send commands to adjust setpoints and modes for energy shifting.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+                <a href="adapters/legacy.html" class="adapter-card">
+                    <h4>Legacy Device Adapters</h4>
+                    <p>
+                        Poll REST APIs or communicate via Modbus/RS-485 with existing devices,
+                        then proxy their data to eBus topics.
+                    </p>
+                    <span class="learn-more">Learn more</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Hop Aboard the eBus</h2>
+            <div class="cta-grid">
+                <div class="cta-card">
+                    <h3>Device Manufacturers</h3>
+                    <p>
+                        Adopt the eBus framework for your HEI devices. Enable your customers
+                        to integrate with any other eBus-compatible device without custom development.
+                    </p>
+                </div>
+                <div class="cta-card">
+                    <h3>Developers</h3>
+                    <p>
+                        Create eBus adapters to enable new integrations. Bridge legacy devices
+                        to the eBus ecosystem and share your work with the community.
+                    </p>
+                </div>
+                <div class="cta-card">
+                    <h3>Homeowners</h3>
+                    <p>
+                        Demand eBus support for the home energy devices you buy.
+                        Your BESS, PV, EVSE, and smart panel should work together seamlessly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h4>eBus</h4>
+                    <p>
+                        Electrification Bus - an open interoperability framework for Home Energy Infrastructure devices.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="https://github.com/electrification-bus">GitHub</a>
+                    <a href="https://homieiot.github.io/">Homie Convention</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>eBus (Electrification Bus) - Open Source Home Energy Interoperability</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polling Overload | Integration Challenges | eBus</title>
+    <meta name="description" content="REST-style APIs create a many-to-many polling problem where HEI devices constantly hammer each other for data.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover { opacity: 1; }
+
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content { padding: 32px 0 80px; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content p { margin-bottom: 16px; color: var(--dark); }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li { margin-bottom: 8px; }
+
+        .example-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .example-box h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .diagram-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .impact-list {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .solution-box {
+            background: #ecfdf5;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution-box h4 {
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .comparison-card h4 {
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .comparison-card.bad h4 { color: #dc2626; }
+        .comparison-card.good h4 { color: #059669; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+        .back-link::before { content: '← '; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: white; }
+
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Challenges</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#problem">Challenges</a> / Polling Overload
+        </div>
+
+        <div class="content">
+            <h1>Polling Overload</h1>
+            <p class="subtitle">
+                Request-Response (REST) style APIs result in constant and frequent polling
+                by each and every API client device.
+            </p>
+
+            <h2>The Problem</h2>
+            <p>
+                Most HEI device APIs, when they exist at all, are based on a RESTful
+                request-response interaction model. To get data from a device, you must ask for it.
+                If you want to know when data changes, you must keep asking.
+            </p>
+            <p>
+                This creates a fundamental problem: <strong>HEI devices are getting hammered by
+                everyone else asking for the same information!</strong>
+            </p>
+
+            <h2>The Many-to-Many Problem</h2>
+            <p>
+                In a home with multiple HEI devices that need to coordinate, polling creates
+                an explosion of network traffic and CPU load:
+            </p>
+
+            <div class="diagram-box">
+REST Polling: Everyone asks everyone for everything
+
+    Battery ──────────────────────┐
+       │                          │
+       ├─► Poll Solar (1/sec)     │
+       ├─► Poll Panel (1/sec)     │
+       └─► Poll Charger (1/sec)   │
+                                  │
+    Solar ────────────────────────┤
+       │                          │
+       ├─► Poll Battery (1/sec)   │
+       ├─► Poll Panel (1/sec)     │
+       └─► Poll Charger (1/sec)   │
+                                  │
+    Smart Panel ──────────────────┤
+       │                          │
+       ├─► Poll Battery (1/sec)   │
+       ├─► Poll Solar (1/sec)     │
+       └─► Poll Charger (1/sec)   │
+                                  │
+    EV Charger ───────────────────┤
+       │                          │
+       ├─► Poll Battery (1/sec)   │
+       ├─► Poll Solar (1/sec)     │
+       └─► Poll Panel (1/sec)     │
+                                  │
+    HEMS ─────────────────────────┘
+       │
+       ├─► Poll Battery (1/sec)
+       ├─► Poll Solar (1/sec)
+       ├─► Poll Panel (1/sec)
+       └─► Poll Charger (1/sec)
+
+Total: 16 polling connections, 16 requests/second
+(And this is a simple example - real homes have more devices!)
+            </div>
+
+            <h2>Scaling Problems</h2>
+            <p>
+                With N devices that all want data from each other, you get N×(N-1) polling
+                connections. This scales quadratically:
+            </p>
+            <ul>
+                <li>4 devices: 12 polling connections</li>
+                <li>6 devices: 30 polling connections</li>
+                <li>8 devices: 56 polling connections</li>
+                <li>10 devices: 90 polling connections</li>
+            </ul>
+
+            <div class="example-box">
+                <h3>Impact on Device Performance</h3>
+                <p>
+                    HEI devices are typically embedded systems with limited CPU and memory.
+                    Their primary job is controlling power electronics safely and precisely.
+                    When they're spending significant resources handling API requests from
+                    multiple clients, several problems emerge:
+                </p>
+                <ul>
+                    <li><strong>Delayed responses:</strong> API latency increases under load</li>
+                    <li><strong>Missed requests:</strong> Devices may drop connections or timeout</li>
+                    <li><strong>Reduced reliability:</strong> Resources diverted from primary function</li>
+                    <li><strong>Rate limiting:</strong> Devices impose request limits, breaking integrations</li>
+                </ul>
+            </div>
+
+            <h2>Wasted Bandwidth and Resources</h2>
+            <p>
+                With polling, the same data is transmitted repeatedly whether it changed or not.
+                A battery's state of charge might only change meaningfully every few minutes,
+                but polling clients receive the same value hundreds of times.
+            </p>
+
+            <div class="comparison-grid">
+                <div class="comparison-card bad">
+                    <h4>REST Polling (Current)</h4>
+                    <ul>
+                        <li>Client must initiate every request</li>
+                        <li>Data sent whether changed or not</li>
+                        <li>N clients = N requests for same data</li>
+                        <li>Latency = polling interval</li>
+                        <li>Load scales with clients</li>
+                    </ul>
+                </div>
+                <div class="comparison-card good">
+                    <h4>Publish/Subscribe (eBus)</h4>
+                    <ul>
+                        <li>Device publishes when data changes</li>
+                        <li>Only changed data is transmitted</li>
+                        <li>N clients = 1 publish (broker fans out)</li>
+                        <li>Latency = instant on change</li>
+                        <li>Load independent of client count</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="impact-list">
+                <h4>Impact on Homeowners</h4>
+                <ul>
+                    <li>Slow and unreliable device integrations</li>
+                    <li>Devices become unresponsive under load</li>
+                    <li>Integration attempts fail due to rate limiting</li>
+                    <li>Network congestion from constant polling traffic</li>
+                    <li>Higher latency for time-sensitive energy decisions</li>
+                </ul>
+            </div>
+
+            <div class="solution-box">
+                <h4>How eBus Solves This</h4>
+                <p>
+                    eBus uses <strong>Publish/Subscribe First</strong> with MQTT. Each device
+                    publishes its status and state to MQTT topics only when values change.
+                    The MQTT broker efficiently distributes updates to all subscribers.
+                </p>
+                <p>
+                    With 5 devices and a HEMS, instead of 20+ polling connections, you have
+                    6 connections to the broker. Each device publishes once, and all interested
+                    parties receive the update instantly.
+                </p>
+                <div class="diagram-box" style="margin-top: 16px;">
+Pub/Sub: Devices publish, subscribers receive
+
+    Battery ──publish──┐
+    Solar ────publish──┤
+    Panel ────publish──┼──► MQTT Broker ──► All Subscribers
+    Charger ──publish──┤         │
+    HEMS ─────subscribe─────────┘
+
+Total: 5 broker connections, updates only on change
+                </div>
+            </div>
+
+            <a href="../index.html#problem" class="back-link">Back to Challenges</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

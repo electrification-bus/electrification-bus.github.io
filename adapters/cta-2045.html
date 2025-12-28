@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTA-2045 Adapter | eBus - Electrification Bus</title>
+    <meta name="description" content="eBus CTA-2045 adapter enables control of water heaters and appliances with EcoPort interfaces via MQTT messaging.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Content */
+        .content {
+            padding: 32px 0 80px;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content h3 {
+            font-size: 1.2rem;
+            margin: 32px 0 12px;
+            color: var(--dark);
+        }
+
+        .content p {
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+        }
+
+        /* Diagram placeholder */
+        .diagram {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .diagram-placeholder {
+            background: var(--light);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 48px;
+            color: var(--gray);
+        }
+
+        .diagram-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Architecture box */
+        .architecture-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        /* Code block */
+        .code-block {
+            background: var(--dark);
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-link::before {
+            content: '← ';
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Problem</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#adapters">Adapters</a> / CTA-2045
+        </div>
+
+        <div class="content">
+            <h1>CTA-2045 Adapter</h1>
+            <p class="subtitle">
+                Control water heaters and flexible-demand appliances through their CTA-2045 (EcoPort) interfaces.
+            </p>
+
+            <h2>Overview</h2>
+            <p>
+                The CTA-2045 standard defines a communication interface for demand-response capable appliances.
+                Many water heaters, HVAC systems, and pool pumps include a CTA-2045 "EcoPort" that allows
+                external systems to control their operation for load shifting and demand response.
+            </p>
+            <p>
+                The eBus CTA-2045 adapter bridges these appliances to the eBus ecosystem, translating
+                CTA-2045 binary messages into eBus/Homie MQTT topics. This enables any eBus device or
+                HEMS to monitor and control CTA-2045 appliances.
+            </p>
+
+            <h2>Architecture</h2>
+            <div class="diagram">
+                <img src="../images/eBus-CTA-2045-adapter.png" alt="eBus CTA-2045 adapter architecture showing integration with water heater via UCM">
+                <p class="diagram-caption">
+                    eBus CTA-2045 adapter architecture showing integration with water heater via UCM
+                </p>
+            </div>
+
+            <h2>How It Works</h2>
+            <ol>
+                <li>
+                    <strong>Physical Connection:</strong> A SkyCentrics Universal Communication Module (UCM)
+                    plugs into the water heater's CTA-2045 EcoPort connector.
+                </li>
+                <li>
+                    <strong>Network Transport:</strong> The UCM connects to the home LAN via Wi-Fi and
+                    establishes a connection to the eBus MQTT broker. CTA-2045 binary messages are
+                    transported/tunneled over MQTT.
+                </li>
+                <li>
+                    <strong>Protocol Translation:</strong> The eBus CTA-2045 adapter subscribes to the
+                    UCM's MQTT topics, decodes the binary CTA-2045 messages, and republishes them as
+                    structured data following the eBus/Homie Convention.
+                </li>
+                <li>
+                    <strong>Control:</strong> An eBus HEMS or other rider can read the water heater's
+                    status and mode via MQTT, and send shed, load-up, or other commands by publishing
+                    to the appropriate command topics.
+                </li>
+            </ol>
+
+            <h2>Supported Commands</h2>
+            <p>The CTA-2045 standard defines several demand-response commands:</p>
+            <ul>
+                <li><strong>Shed:</strong> Reduce or stop energy consumption immediately</li>
+                <li><strong>End Shed:</strong> Return to normal operation</li>
+                <li><strong>Load Up:</strong> Increase energy consumption (e.g., heat water now while energy is cheap/available)</li>
+                <li><strong>Critical Peak:</strong> Signal critical peak pricing period</li>
+                <li><strong>Grid Emergency:</strong> Signal grid emergency condition</li>
+            </ul>
+
+            <div class="info-box">
+                <p>
+                    <strong>Note:</strong> The UCM handles the physical CTA-2045 protocol. The eBus adapter
+                    focuses on translating between the UCM's MQTT representation and the eBus/Homie convention,
+                    making the water heater accessible to all eBus riders.
+                </p>
+            </div>
+
+            <h2>Benefits</h2>
+            <ul>
+                <li>No polling required - status updates are pushed via MQTT pub/sub</li>
+                <li>Any eBus device can access water heater data without redundant integration</li>
+                <li>Enables sophisticated energy management (e.g., heat water during solar production)</li>
+                <li>Works locally without cloud connectivity</li>
+                <li>Standard Homie schema makes the device self-describing</li>
+            </ul>
+
+            <h2>Hardware Requirements</h2>
+            <ul>
+                <li>CTA-2045 compatible appliance (water heater, pool pump, HVAC, etc.)</li>
+                <li>SkyCentrics UCM or compatible CTA-2045 network bridge</li>
+                <li>eBus MQTT broker (can run on any Linux device on the LAN)</li>
+            </ul>
+
+            <a href="../index.html#adapters" class="back-link">Back to Adapters</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

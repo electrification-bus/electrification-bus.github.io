@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Device Adapters | eBus - Electrification Bus</title>
+    <meta name="description" content="eBus legacy device adapters integrate existing HEI devices via REST APIs, Modbus, and other protocols into the eBus ecosystem.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Content */
+        .content {
+            padding: 32px 0 80px;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content h3 {
+            font-size: 1.2rem;
+            margin: 32px 0 12px;
+            color: var(--dark);
+        }
+
+        .content p {
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+        }
+
+        /* Diagram placeholder */
+        .diagram {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .diagram-placeholder {
+            background: var(--light);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 48px;
+            color: var(--gray);
+        }
+
+        .diagram-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Architecture box */
+        .architecture-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        /* Code block */
+        .code-block {
+            background: var(--dark);
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        /* Example cards */
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .example-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .example-card h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .example-card .tech {
+            font-family: monospace;
+            background: var(--light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .example-card p {
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-link::before {
+            content: '← ';
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: white;
+        }
+
+        /* Mermaid diagram styling */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 24px 0;
+        }
+    </style>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#eff6ff',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#2563eb',
+                lineColor: '#64748b',
+                secondaryColor: '#ecfdf5',
+                tertiaryColor: '#f8fafc'
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Problem</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#adapters">Adapters</a> / Legacy Devices
+        </div>
+
+        <div class="content">
+            <h1>Legacy Device Adapters</h1>
+            <p class="subtitle">
+                Integrate existing HEI devices into eBus by adapting their proprietary interfaces
+                to the standard eBus/Homie convention.
+            </p>
+
+            <h2>Overview</h2>
+            <p>
+                Most existing Home Energy Infrastructure (HEI) devices don't natively support eBus.
+                However, many expose some form of API or interface - whether a local REST API,
+                Modbus registers, or even a cloud API. Legacy adapters bridge these interfaces
+                to eBus, making their data and controls available to all eBus riders.
+            </p>
+            <p>
+                In eBus terminology, devices that don't support eBus are called "pedestrians,"
+                while eBus-compatible devices are "riders." A rider that adapts a pedestrian
+                device acts as a proxy, publishing the pedestrian's data to eBus topics.
+            </p>
+
+            <div class="info-box">
+                <p>
+                    <strong>Key Benefit:</strong> Once one rider adapts a pedestrian device, ALL eBus
+                    riders benefit. The adapter does the integration work once, and the data becomes
+                    available to the entire eBus ecosystem.
+                </p>
+            </div>
+
+            <h2>Architecture Pattern</h2>
+            <div class="diagram">
+                <pre class="mermaid">
+flowchart TB
+    subgraph legacy["Legacy Devices (Pedestrians)"]
+        pw["Tesla Powerwall<br/><small>REST API</small>"]
+        env["Enphase Envoy<br/><small>REST API</small>"]
+        se["SolarEdge Inverter<br/><small>Modbus TCP</small>"]
+    end
+
+    subgraph adapters["eBus Adapter Layer"]
+        ta["Tesla Adapter"]
+        ea["Enphase Adapter"]
+        sa["SolarEdge Adapter"]
+    end
+
+    subgraph ebus["eBus Ecosystem"]
+        broker[("eBus MQTT Broker<br/><small>Homie Convention</small>")]
+    end
+
+    pw -->|"poll"| ta
+    env -->|"poll"| ea
+    se -->|"read registers"| sa
+
+    ta -->|"publish"| broker
+    ea -->|"publish"| broker
+    sa -->|"publish"| broker
+                </pre>
+                <p class="diagram-caption">
+                    Legacy adapters poll or connect to device APIs and publish to eBus MQTT
+                </p>
+            </div>
+
+            <h2>Adapter Types</h2>
+
+            <h3>REST API Adapters</h3>
+            <p>
+                Many modern devices expose a local REST API for monitoring and control. The adapter
+                periodically polls these endpoints and publishes updates to MQTT topics.
+            </p>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Tesla Powerwall</h4>
+                    <span class="tech">REST / JSON</span>
+                    <p>Poll the local Gateway API for battery SOC, power flow, and grid status. Publish to Homie topics for ESS devices.</p>
+                </div>
+                <div class="example-card">
+                    <h4>Enphase Envoy</h4>
+                    <span class="tech">REST / JSON</span>
+                    <p>Read solar production, consumption, and per-panel data from the Envoy local API.</p>
+                </div>
+            </div>
+
+            <h3>Modbus Adapters</h3>
+            <p>
+                Industrial and solar equipment often uses Modbus RTU (serial) or Modbus TCP for communication.
+                Adapters read registers and translate to MQTT.
+            </p>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>SolarEdge Inverter</h4>
+                    <span class="tech">Modbus TCP</span>
+                    <p>Read SunSpec-compliant registers for AC/DC power, energy totals, and inverter status.</p>
+                </div>
+                <div class="example-card">
+                    <h4>Fronius Inverter</h4>
+                    <span class="tech">Modbus TCP</span>
+                    <p>Access real-time and historical data from Fronius inverters via Modbus.</p>
+                </div>
+                <div class="example-card">
+                    <h4>Energy Meters</h4>
+                    <span class="tech">Modbus RTU</span>
+                    <p>Read power, voltage, current, and energy from industrial meters via RS-485.</p>
+                </div>
+            </div>
+
+            <h3>Cloud API Adapters</h3>
+            <p>
+                Some devices only expose cloud APIs. While not ideal (latency, availability), these
+                can still be adapted to eBus for informational purposes.
+            </p>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Sense Energy Monitor</h4>
+                    <span class="tech">Cloud API</span>
+                    <p>Access device-level load detection data from Sense's cloud service.</p>
+                </div>
+                <div class="example-card">
+                    <h4>Emporia Vue</h4>
+                    <span class="tech">Cloud API</span>
+                    <p>Retrieve circuit-level energy data from Emporia's cloud platform.</p>
+                </div>
+            </div>
+
+            <h2>Implementation Considerations</h2>
+            <h3>Polling vs Events</h3>
+            <p>
+                REST APIs require polling, which introduces latency. Poll frequently enough for
+                responsiveness (1-5 seconds for real-time data) but not so often that you overload
+                the device. Once published to MQTT, all subscribers receive updates instantly.
+            </p>
+
+            <h3>Error Handling</h3>
+            <p>
+                Adapters should handle device unavailability gracefully, updating the Homie $state
+                topic to indicate connection issues and resuming normal operation when the device
+                returns.
+            </p>
+
+            <h3>Authentication</h3>
+            <p>
+                Many local APIs require authentication. Adapters must securely store credentials
+                and handle token refresh for OAuth-based APIs.
+            </p>
+
+            <h2>Running Adapters</h2>
+            <p>
+                Adapters need an execution context - somewhere to run the polling/translation code.
+                Options include:
+            </p>
+            <ul>
+                <li><strong>Raspberry Pi or SBC:</strong> Dedicated low-power device on the home LAN</li>
+                <li><strong>Home Assistant:</strong> If running HA, adapters can be HA integrations</li>
+                <li><strong>Docker container:</strong> On any Linux device with Docker</li>
+                <li><strong>HEI device:</strong> Some eBus-supporting devices may host third-party adapters</li>
+            </ul>
+
+            <h2>Benefits</h2>
+            <ul>
+                <li>Integrate existing devices without waiting for manufacturer support</li>
+                <li>Standardize data format across diverse device APIs</li>
+                <li>Enable cross-device coordination that manufacturers don't support</li>
+                <li>Community can develop and share adapters</li>
+                <li>Once adapted, all eBus riders benefit from the integration</li>
+            </ul>
+
+            <a href="../index.html#adapters" class="back-link">Back to Adapters</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Dependency | Integration Challenges | eBus</title>
+    <meta name="description" content="Many HEI device APIs only work via cloud services, causing latency and failing during grid outages when needed most.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover { opacity: 1; }
+
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content { padding: 32px 0 80px; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content h3 {
+            font-size: 1.2rem;
+            margin: 32px 0 12px;
+            color: var(--dark);
+        }
+
+        .content p { margin-bottom: 16px; color: var(--dark); }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li { margin-bottom: 8px; }
+
+        .example-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .example-box h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .diagram-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .impact-list {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .solution-box {
+            background: #ecfdf5;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution-box h4 {
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box h4 {
+            color: #d97706;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+        .back-link::before { content: '← '; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Challenges</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#problem">Challenges</a> / Cloud Dependency
+        </div>
+
+        <div class="content">
+            <h1>Cloud Dependency</h1>
+            <p class="subtitle">
+                Many device APIs only work via cloud services, causing latency issues and
+                failing during grid outages when local coordination is needed most.
+            </p>
+
+            <h2>The Problem</h2>
+            <p>
+                HEI devices desire and require connection to the Internet and cloud services.
+                Typically this is for connection to the manufacturer's cloud, firmware updates,
+                and to enable smartphone apps for homeowner monitoring and control.
+            </p>
+            <p>
+                However, some manufacturers provide <strong>only</strong> cloud-based APIs for
+                device integration. This architectural choice has serious consequences for
+                home energy management.
+            </p>
+
+            <h2>Latency Issues</h2>
+            <p>
+                Even in the best case, cloud-based APIs suffer from latency issues. A simple
+                request to read a device's current state must travel:
+            </p>
+            <div class="diagram-box">
+Your HEMS                                                    Device
+    │                                                           │
+    ├──► Internet ──► Manufacturer Cloud ──► Internet ──────────┤
+    │                        │                                  │
+    │                   (processing)                            │
+    │                        │                                  │
+    ◄────────────────────────┴──────────────────────────────────┘
+
+Round-trip time: 100-500ms+ (vs. &lt;10ms for local)
+    </div>
+            <p>
+                For real-time energy management decisions - like responding to rapid changes in
+                solar production or managing power during a grid event - this latency is unacceptable.
+            </p>
+
+            <h2>Failure During Grid Outages</h2>
+            <p>
+                The most critical time for HEI device coordination is during a grid outage. Your
+                battery, solar, EV charger, and transfer switch need to coordinate to keep your
+                home powered safely. Yet this is precisely when cloud APIs are <strong>most likely
+                to fail</strong>.
+            </p>
+
+            <div class="example-box">
+                <h3>Grid Outage Scenario</h3>
+                <p>When the grid goes down:</p>
+                <ul>
+                    <li>Your internet connection may also fail (cable modem needs power, ISP infrastructure affected)</li>
+                    <li>Even if your home network stays up, the manufacturer's cloud may be unreachable</li>
+                    <li>Cloud services themselves may be affected by widespread outages</li>
+                    <li>High demand on cloud services during regional events causes slowdowns</li>
+                </ul>
+                <p>
+                    <strong>Result:</strong> Your devices can't coordinate at exactly the moment
+                    when coordination is most critical. Your battery doesn't know to start discharging.
+                    Your solar doesn't know it needs to curtail. Your EV charger doesn't know it
+                    can provide backup power.
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>The Irony</h4>
+                <p>
+                    Cloud-dependent devices are least reliable exactly when reliability matters most.
+                    Grid outages are when you need your home energy system to work perfectly - and
+                    when cloud connectivity is least certain.
+                </p>
+            </div>
+
+            <h2>Privacy and Security Concerns</h2>
+            <p>
+                Cloud-only APIs also raise significant privacy and security concerns:
+            </p>
+            <ul>
+                <li><strong>Data exposure:</strong> Detailed energy usage patterns reveal when you're home, your daily routines, and what appliances you use</li>
+                <li><strong>Third-party access:</strong> Your data passes through manufacturer servers, potentially accessible to employees or breaches</li>
+                <li><strong>Service discontinuation:</strong> If the manufacturer shuts down cloud services, your device integration stops working</li>
+                <li><strong>Account requirements:</strong> You must create accounts and agree to terms of service just to control devices you own</li>
+            </ul>
+
+            <div class="impact-list">
+                <h4>Impact on Homeowners</h4>
+                <ul>
+                    <li>Energy management fails during outages when it's needed most</li>
+                    <li>Latency prevents real-time optimization</li>
+                    <li>Privacy-sensitive data leaves your home</li>
+                    <li>Dependency on manufacturer's continued cloud operation</li>
+                    <li>Internet outage = loss of device control</li>
+                </ul>
+            </div>
+
+            <h2>Why Manufacturers Choose Cloud</h2>
+            <ul>
+                <li><strong>Easier development:</strong> Cloud APIs are simpler to secure and update than local APIs</li>
+                <li><strong>Data collection:</strong> Usage data has business value for product improvement and monetization</li>
+                <li><strong>Recurring revenue:</strong> Cloud services can enable subscription features</li>
+                <li><strong>Support simplicity:</strong> All traffic flows through controlled infrastructure</li>
+            </ul>
+
+            <div class="solution-box">
+                <h4>How eBus Solves This</h4>
+                <p>
+                    eBus mandates that <strong>all API access MUST be local, not via a cloud</strong>.
+                    Devices communicate directly on your home network using standard protocols (MQTT over IP).
+                </p>
+                <p>
+                    This means your home energy system continues to work during internet outages,
+                    responds in milliseconds instead of hundreds of milliseconds, and keeps your
+                    data on your network.
+                </p>
+                <p>
+                    Devices can still connect to manufacturer clouds for firmware updates and
+                    smartphone apps - but local integration doesn't depend on it.
+                </p>
+            </div>
+
+            <a href="../index.html#problem" class="back-link">Back to Challenges</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

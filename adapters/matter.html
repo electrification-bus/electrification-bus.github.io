@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matter Adapter | eBus - Electrification Bus</title>
+    <meta name="description" content="eBus Matter adapter bridges Matter-enabled thermostats and smart home devices to the eBus ecosystem for energy management.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover {
+            opacity: 1;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Content */
+        .content {
+            padding: 32px 0 80px;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content h3 {
+            font-size: 1.2rem;
+            margin: 32px 0 12px;
+            color: var(--dark);
+        }
+
+        .content p {
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li {
+            margin-bottom: 8px;
+        }
+
+        /* Diagram placeholder */
+        .diagram {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .diagram img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .diagram-placeholder {
+            background: var(--light);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 48px;
+            color: var(--gray);
+        }
+
+        .diagram-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Architecture box */
+        .architecture-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        /* Code block */
+        .code-block {
+            background: var(--dark);
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-link::before {
+            content: '← ';
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Problem</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#adapters">Adapters</a> / Matter
+        </div>
+
+        <div class="content">
+            <h1>Matter Adapter</h1>
+            <p class="subtitle">
+                Bridge Matter-enabled thermostats and smart home devices to eBus for energy shifting and demand response.
+            </p>
+
+            <h2>Overview</h2>
+            <p>
+                Matter is the new unified smart home standard backed by Apple, Google, Amazon, and the
+                Connectivity Standards Alliance. Many thermostats, smart plugs, and appliances now support
+                Matter for local control without cloud dependencies.
+            </p>
+            <p>
+                The eBus Matter adapter bridges Matter devices to the eBus ecosystem, enabling HEMS and
+                other eBus riders to monitor and control these devices for energy management purposes.
+                This is particularly valuable for HVAC systems, which represent a significant portion of
+                home energy consumption.
+            </p>
+
+            <h2>Architecture</h2>
+            <div class="diagram">
+                <img src="../images/eBus-Matter-adapter.png" alt="eBus Matter adapter architecture showing integration with HVAC thermostat">
+                <p class="diagram-caption">
+                    eBus Matter adapter architecture showing integration with HVAC thermostat
+                </p>
+            </div>
+
+            <h2>How It Works</h2>
+            <ol>
+                <li>
+                    <strong>Matter Controller:</strong> A Matter controller (which can run on a Raspberry Pi
+                    or other Linux device) commissions and communicates with Matter devices on the local network.
+                </li>
+                <li>
+                    <strong>Device Discovery:</strong> The Matter adapter discovers Matter devices via the
+                    controller and maps their capabilities to eBus/Homie topics.
+                </li>
+                <li>
+                    <strong>State Publishing:</strong> The adapter subscribes to Matter device state changes
+                    and publishes them to MQTT topics following the Homie Convention.
+                </li>
+                <li>
+                    <strong>Control:</strong> An eBus HEMS can send commands by publishing to the device's
+                    command topics. The adapter translates these to Matter commands and sends them to the device.
+                </li>
+            </ol>
+
+            <h2>Supported Device Types</h2>
+            <p>The Matter adapter supports various device clusters including:</p>
+            <ul>
+                <li><strong>Thermostat:</strong> Temperature setpoints, modes (heat/cool/auto/off), fan control</li>
+                <li><strong>On/Off:</strong> Simple switch control for smart plugs and switches</li>
+                <li><strong>Level Control:</strong> Dimmable lights and variable-speed devices</li>
+                <li><strong>Temperature Measurement:</strong> Ambient temperature sensors</li>
+                <li><strong>Occupancy Sensing:</strong> Motion and presence detection</li>
+            </ul>
+
+            <h2>Energy Management Scenarios</h2>
+            <h3>Pre-Cooling Before Peak</h3>
+            <p>
+                When electricity prices are low or solar production is high, the HEMS can lower the
+                cooling setpoint to "bank" coolness in the home's thermal mass. When prices rise,
+                the setpoint is raised, reducing HVAC runtime during expensive periods.
+            </p>
+
+            <h3>Load Shedding During Grid Events</h3>
+            <p>
+                During demand-response events, the HEMS can temporarily adjust setpoints or switch
+                to fan-only mode to reduce load while maintaining acceptable comfort.
+            </p>
+
+            <h3>Solar Self-Consumption</h3>
+            <p>
+                The HEMS can coordinate with solar PV and battery status to run HVAC when there's
+                excess solar production, maximizing self-consumption and minimizing grid exports.
+            </p>
+
+            <div class="info-box">
+                <p>
+                    <strong>Note:</strong> Matter operates entirely locally - no cloud connection required.
+                    This makes it ideal for energy management where reliability during grid outages is critical.
+                </p>
+            </div>
+
+            <h2>Benefits</h2>
+            <ul>
+                <li>Local control without cloud dependencies</li>
+                <li>Works with thermostats from multiple manufacturers</li>
+                <li>Enables sophisticated HVAC energy management strategies</li>
+                <li>HVAC status visible to all eBus devices via standard Homie topics</li>
+                <li>Integrates with broader home energy optimization</li>
+            </ul>
+
+            <h2>Requirements</h2>
+            <ul>
+                <li>Matter-compatible thermostat or device</li>
+                <li>Matter controller (can run on Raspberry Pi, Home Assistant, etc.)</li>
+                <li>eBus MQTT broker on the local network</li>
+            </ul>
+
+            <a href="../index.html#adapters" class="back-link">Back to Adapters</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

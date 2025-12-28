@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Integrations | Integration Challenges | eBus</title>
+    <meta name="description" content="Each HEI device-device integration is a custom development effort requiring direct involvement from vendors.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover { opacity: 1; }
+
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content { padding: 32px 0 80px; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content p { margin-bottom: 16px; color: var(--dark); }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li { margin-bottom: 8px; }
+
+        .example-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .example-box h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .diagram-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .impact-list {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .solution-box {
+            background: #ecfdf5;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution-box h4 {
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+        .back-link::before { content: '← '; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Challenges</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#problem">Challenges</a> / Custom Integrations
+        </div>
+
+        <div class="content">
+            <h1>Custom Integrations</h1>
+            <p class="subtitle">
+                Each HEI device-device integration is a custom, unique development effort
+                which requires the direct involvement of one (or both!) HEI device vendors.
+            </p>
+
+            <h2>The Problem</h2>
+            <p>
+                Without a standard interoperability framework, every integration between two
+                HEI devices requires a custom development effort. Manufacturer A must work
+                directly with Manufacturer B to create a specific integration between their products.
+            </p>
+            <p>
+                This doesn't scale. With N device manufacturers, you need N×(N-1)/2 bilateral
+                integrations for full interoperability. And each integration requires ongoing
+                maintenance as products evolve.
+            </p>
+
+            <h2>The Combinatorial Explosion</h2>
+            <div class="diagram-box">
+Custom Integrations Scale Poorly
+
+Manufacturers:  3      5       10       20
+Integrations:   3      10      45       190
+
+For each pair of manufacturers to integrate:
+- Business development negotiations
+- Technical API/protocol discussions
+- Custom development work
+- Testing and certification
+- Ongoing maintenance
+- Version compatibility tracking
+
+With 10 major HEI device makers, that's 45 separate bilateral agreements!
+            </div>
+
+            <h2>Vendor Dependencies</h2>
+            <p>
+                Custom integrations require direct vendor involvement, which introduces
+                several problems:
+            </p>
+            <ul>
+                <li><strong>Business priorities:</strong> Vendors prioritize integrations based on market size, not your needs</li>
+                <li><strong>Competitive concerns:</strong> Competitors may refuse to integrate</li>
+                <li><strong>Resource constraints:</strong> Small teams can only support limited integrations</li>
+                <li><strong>Timeline delays:</strong> Integration requests queue behind other priorities</li>
+            </ul>
+
+            <div class="example-box">
+                <h3>Real-World Examples</h3>
+                <p><strong>Tesla Powerwall + Third-Party Solar:</strong></p>
+                <p>
+                    Tesla has created specific integrations with SolarEdge and a few other inverter
+                    manufacturers. If your inverter isn't on the supported list, you're out of luck
+                    for direct integration - hence the need for the Neurio CT workaround.
+                </p>
+                <p><strong>Smart Panel + ESS Integration:</strong></p>
+                <p>
+                    SPAN Panel works seamlessly with Tesla Powerwall (they built the integration)
+                    but requires workarounds for other battery systems. Each ESS manufacturer
+                    requires separate integration work.
+                </p>
+                <p><strong>V2H EVSE + Transfer Switch:</strong></p>
+                <p>
+                    A V2H-capable charger needs to know grid status from a transfer switch before
+                    it can safely backfeed. Without a standard protocol, each charger manufacturer
+                    must integrate with each transfer switch manufacturer individually.
+                </p>
+            </div>
+
+            <h2>Consequences for Homeowners</h2>
+            <p>
+                The custom integration requirement forces homeowners into difficult choices:
+            </p>
+            <ul>
+                <li><strong>Single-vendor lock-in:</strong> Buy everything from one manufacturer for guaranteed compatibility</li>
+                <li><strong>Limited choices:</strong> Choose only from "supported" device lists</li>
+                <li><strong>Degraded functionality:</strong> Accept that mixed-vendor systems won't work together optimally</li>
+                <li><strong>DIY workarounds:</strong> Implement custom solutions using Home Assistant or similar platforms</li>
+            </ul>
+
+            <div class="impact-list">
+                <h4>Impact on the Market</h4>
+                <ul>
+                    <li>Innovation stifled - new entrants can't integrate without vendor agreements</li>
+                    <li>Market consolidation - only large vendors can afford many integrations</li>
+                    <li>Higher prices - lack of competition from integration barriers</li>
+                    <li>Slower adoption - complexity discourages whole-home electrification</li>
+                    <li>Wasted effort - same integration work repeated by different parties</li>
+                </ul>
+            </div>
+
+            <h2>The Alternative: Standards</h2>
+            <p>
+                Other industries have solved this with standards. USB allows any device to
+                work with any computer. Wi-Fi lets any device connect to any router.
+                Matter is bringing this to smart home devices.
+            </p>
+            <p>
+                HEI devices need the same approach - a standard way to discover, connect,
+                and communicate that doesn't require bilateral agreements.
+            </p>
+
+            <div class="solution-box">
+                <h4>How eBus Solves This</h4>
+                <p>
+                    eBus provides a common interoperability framework that any manufacturer can
+                    implement independently. By adopting eBus:
+                </p>
+                <ul>
+                    <li>Devices automatically interoperate with all other eBus devices</li>
+                    <li>No bilateral agreements or custom development required</li>
+                    <li>Third parties can create adapters for non-eBus devices</li>
+                    <li>Once one adapter exists, everyone benefits</li>
+                </ul>
+                <p>
+                    Instead of N×(N-1)/2 integrations, you need N implementations of one standard.
+                    10 manufacturers means 10 implementations, not 45 integrations.
+                </p>
+            </div>
+
+            <a href="../index.html#problem" class="back-link">Back to Challenges</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>

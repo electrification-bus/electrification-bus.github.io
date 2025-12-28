@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single DER Limitation | Integration Challenges | eBus</title>
+    <meta name="description" content="Microgrid Interconnect Devices are typically integrated into a single grid-forming DER and cannot coordinate with additional DERs.">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 16px 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 32px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        nav a:hover { opacity: 1; }
+
+        .breadcrumb {
+            padding: 16px 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .content { padding: 32px 0 80px; }
+
+        .content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .content .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            margin: 48px 0 16px;
+            color: var(--dark);
+        }
+
+        .content p { margin-bottom: 16px; color: var(--dark); }
+
+        .content ul, .content ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .content li { margin-bottom: 8px; }
+
+        .example-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin: 32px 0;
+        }
+
+        .example-box h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .diagram-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .impact-list {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .impact-list h4 {
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .solution-box {
+            background: #ecfdf5;
+            border-left: 4px solid var(--secondary);
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution-box h4 {
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box h4 {
+            color: #d97706;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 48px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+        .back-link::before { content: '← '; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="../index.html" class="logo">e<span>Bus</span></a>
+            <nav>
+                <a href="../index.html#problem">Challenges</a>
+                <a href="../index.html#devices">Devices</a>
+                <a href="../index.html#principles">Principles</a>
+                <a href="../index.html#adapters">Adapters</a>
+                <a href="https://github.com/electrification-bus">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">eBus</a> / <a href="../index.html#problem">Challenges</a> / Single DER Limitation
+        </div>
+
+        <div class="content">
+            <h1>Single DER Limitation</h1>
+            <p class="subtitle">
+                The Microgrid Interconnect Device (MID) function is typically integrated into a single,
+                specific, grid-forming DER - and is unable to interoperate with additional grid-forming DERs.
+            </p>
+
+            <h2>What is a MID?</h2>
+            <p>
+                A Microgrid Interconnect Device (MID), also known as a transfer switch, manages the
+                connection between your home and the utility grid. During normal operation, it connects
+                your home to the grid. During an outage, it safely disconnects from the grid and allows
+                your home to be powered by local generation (battery, solar, generator, V2H).
+            </p>
+            <p>
+                The MID is a critical safety device - it prevents backfeeding power to the grid during
+                an outage (which would endanger utility workers) and ensures smooth transitions between
+                grid and island modes.
+            </p>
+
+            <h2>The Problem</h2>
+            <p>
+                Today, the MID function is typically integrated directly into a battery system or
+                inverter. The Tesla Powerwall has a built-in transfer switch. The Enphase IQ System
+                Controller serves this function. This tight integration makes sense for simple
+                systems with a single grid-forming device.
+            </p>
+            <p>
+                <strong>But what happens when you have multiple grid-forming DERs?</strong>
+            </p>
+
+            <div class="example-box">
+                <h3>Modern Home Energy System</h3>
+                <p>Homeowners increasingly want multiple backup power sources:</p>
+                <ul>
+                    <li>A Battery Energy Storage System (BESS) for daily cycling and short outages</li>
+                    <li>Rooftop solar PV for daytime generation</li>
+                    <li>A V2H-capable EV charger that can use the car's battery for extended backup</li>
+                    <li>Maybe even a second EVSE for a second EV</li>
+                    <li>A portable generator for emergencies</li>
+                </ul>
+                <p>
+                    Each of these could potentially form a microgrid and power the home. But the
+                    integrated MID in your battery system doesn't know how to coordinate with
+                    your V2H charger or generator.
+                </p>
+            </div>
+
+            <h2>The Coordination Challenge</h2>
+            <div class="diagram-box">
+Current Situation: MID integrated into BESS
+
+                        Grid
+                          │
+                    ┌─────┴─────┐
+                    │Powerwall  │
+                    │ (BESS +   │◄── MID only knows about the Powerwall
+                    │   MID)    │    Can't coordinate with other DERs
+                    └─────┬─────┘
+                          │
+                    ┌─────┴─────┐
+                    │  Home     │
+                    │  Loads    │
+                    └───────────┘
+                          │
+         ┌────────────────┼────────────────┐
+         │                │                │
+    ┌────┴────┐     ┌────┴────┐     ┌────┴────┐
+    │  Solar  │     │V2H EVSE │     │Generator│
+    │Inverter │     │  + EV   │     │         │
+    └─────────┘     └─────────┘     └─────────┘
+         │                │                │
+         └────────────────┴────────────────┘
+                          │
+              These DERs can't participate
+              in grid-forming because the
+              MID doesn't know about them
+            </div>
+
+            <h2>Consequences</h2>
+            <ul>
+                <li><strong>Underutilized resources:</strong> Your EV's 100kWh battery sits idle during outages because the MID doesn't know it can help</li>
+                <li><strong>No graceful handoff:</strong> When the BESS depletes, you can't smoothly transition to generator backup</li>
+                <li><strong>Solar curtailment issues:</strong> The BESS MID uses frequency shifting to curtail solar, causing problems (see below)</li>
+                <li><strong>Stranded investment:</strong> V2H capability you paid for can't be used for whole-home backup</li>
+            </ul>
+
+            <div class="warning-box">
+                <h4>The Frequency Shifting Problem</h4>
+                <p>
+                    When off-grid with high state of charge and excess solar production, a Tesla Powerwall
+                    needs to curtail PV output. Since it can't communicate with the solar inverter, it
+                    shifts the line frequency out of spec, triggering the solar inverter's safety shutdown.
+                </p>
+                <p>This causes side effects:</p>
+                <ul>
+                    <li>Light dimmers flicker from the frequency change</li>
+                    <li>Household UPS units detect the frequency anomaly as a power failure</li>
+                    <li>UPS units switch to battery, drain quickly, and drop network equipment</li>
+                    <li>Result: You lose internet/computing during an outage even though you have power!</li>
+                </ul>
+            </div>
+
+            <h2>The Growing Problem</h2>
+            <p>
+                This limitation becomes more acute as home energy systems grow more sophisticated:
+            </p>
+            <ul>
+                <li><strong>V2H adoption:</strong> As more EVs and chargers support V2H/V2G, homes will have multiple potential backup sources</li>
+                <li><strong>Battery expansion:</strong> Homeowners may want to add batteries from different manufacturers over time</li>
+                <li><strong>Smart panels:</strong> New smart panels may include MID functionality - how do they coordinate with existing BESS?</li>
+                <li><strong>Generator integration:</strong> Portable and permanent generators should integrate seamlessly with other DERs</li>
+            </ul>
+
+            <div class="impact-list">
+                <h4>Impact on Homeowners</h4>
+                <ul>
+                    <li>Can't fully utilize multi-source backup systems</li>
+                    <li>Vendor lock-in - must buy all DERs from same manufacturer</li>
+                    <li>Side effects from workarounds like frequency shifting</li>
+                    <li>No graceful degradation when primary backup depletes</li>
+                </ul>
+            </div>
+
+            <div class="solution-box">
+                <h4>How eBus Solves This</h4>
+                <p>
+                    eBus recognizes that the MID <strong>MUST become a separate, distinct HEI device</strong>
+                    that can communicate and coordinate with multiple grid-forming DERs.
+                </p>
+                <p>
+                    With eBus, a standalone MID can:
+                </p>
+                <ul>
+                    <li>Discover all grid-forming DERs on the network via mDNS</li>
+                    <li>Receive state-of-energy updates from all sources via MQTT</li>
+                    <li>Coordinate which DER(s) should form the microgrid</li>
+                    <li>Send curtailment commands via proper communication, not frequency hacks</li>
+                    <li>Manage graceful transitions between backup sources</li>
+                </ul>
+                <p>
+                    A market-leading BESS vendor is already shopping their third-party MID specification,
+                    and smart panels may well include MID functionality. eBus provides the standard
+                    communication layer these devices need.
+                </p>
+            </div>
+
+            <a href="../index.html#problem" class="back-link">Back to Challenges</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>eBus (Electrification Bus) - <a href="https://github.com/electrification-bus">GitHub</a></p>
+        </div>
+    </footer>
+</body>
+</html>
