@@ -452,6 +452,86 @@
             font-size: 0.85rem;
         }
 
+        /* Announcement Banner */
+        .announcement-banner {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .announcement-banner a {
+            color: white;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .announcement-banner a:hover {
+            text-decoration: none;
+        }
+
+        /* Adopters Section */
+        .adopters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
+        }
+
+        .adopter-card .adopter-logo {
+            height: 40px;
+            margin-bottom: 16px;
+        }
+
+        .adopter-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .adopter-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .adopter-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .adopter-card p {
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .adopter-card .adopter-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .adopter-card .adopter-links li {
+            margin-bottom: 8px;
+        }
+
+        .adopter-card .adopter-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .adopter-card .adopter-links a:hover {
+            text-decoration: underline;
+        }
+
+        .adopter-card .adopter-links a::before {
+            content: '→ ';
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -490,10 +570,16 @@
                 <a href="#devices">Devices</a>
                 <a href="#principles">Principles</a>
                 <a href="#standards">Relationship to Other Standards</a>
+                <a href="#adopters">Adopters</a>
                 <a href="#resources">Resources</a>
             </nav>
         </div>
     </header>
+
+    <div class="announcement-banner">
+        SPAN adopts eBus! SPAN is the first company to publicly adopt the eBus framework &mdash;
+        <a href="https://span.io/blog/introducing-span-api-and-span-home-on-premise-public-beta">Read the announcement</a>
+    </div>
 
     <section class="hero">
         <div class="container">
@@ -730,6 +816,31 @@
                         operating envelope control, and demand response events). <a href="https://www.openadr.org/openadr-3-0" style="color: inherit;">OpenADR 3</a> and <a href="https://standards.ieee.org/ieee/2030.5/11216/" style="color: inherit;">IEEE 2030.5</a> handle that domain.
                         eBus enables local device coordination once signals are received.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="adopters" class="section-alt">
+        <div class="container">
+            <h2>eBus Adopters</h2>
+            <p class="section-subtitle">
+                Companies and products that have adopted the eBus framework for home energy device interoperability.
+            </p>
+            <div class="adopters-grid">
+                <div class="adopter-card">
+                    <img src="images/span-logo.png" alt="SPAN" class="adopter-logo">
+                    <h3>SPAN</h3>
+                    <p>
+                        SPAN builds the next-generation smart electrical panel. In February 2026, SPAN publicly
+                        announced SPAN API and SPAN Home On-premise, adopting the eBus framework with local MQTT
+                        and the Homie convention for on-premise device integration.
+                    </p>
+                    <ul class="adopter-links">
+                        <li><a href="https://span.io/blog/introducing-span-api-and-span-home-on-premise-public-beta">Announcement blog post</a></li>
+                        <li><a href="https://github.com/spanio/SPAN-API-Client-Docs">SPAN API Documentation</a></li>
+                        <li><a href="https://support.span.io/hc/en-us/articles/38584072525207-SPAN-Home-On-premise">SPAN Home On-premise User Guide</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
